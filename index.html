@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ติวปลายภาค Data Mining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7fb; --bg2:#f6f1ff; --card:#ffffff; --ink:#3b2f4a; --soft:#7a6b8c; --line:#efe6f6;
+  --pink:#ff7eb6; --pink-l:#ffe1ef; --pink-d:#d95b95;
+  --purple:#9b7bff; --purple-l:#ece6ff; --purple-d:#7556e0;
+  --mint:#2fc49a; --mint-l:#d9f8ee; --mint-d:#1f9e7a;
+  --yellow:#ffbe3d; --yellow-l:#fff1cc; --yellow-d:#d99a1c;
+  --blue:#5aaeff; --blue-l:#e0f0ff; --red:#ff6b81; --red-l:#ffe3e8;
+  --shadow:0 6px 0 rgba(155,123,255,.16), 0 14px 32px rgba(155,123,255,.10);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d1828; --bg2:#262038; --card:#2b2440; --ink:#f4ecff; --soft:#bfb2d6; --line:#3e3558;
+  --pink-l:#4a2a40; --purple-l:#3a2f5e; --mint-l:#1f4a40; --yellow-l:#4d4020; --blue-l:#203c5c; --red-l:#552a35;
+  --shadow:0 6px 0 rgba(0,0,0,.35), 0 14px 30px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{
+  --bg:#1d1828; --bg2:#262038; --card:#2b2440; --ink:#f4ecff; --soft:#bfb2d6; --line:#3e3558;
+  --pink-l:#4a2a40; --purple-l:#3a2f5e; --mint-l:#1f4a40; --yellow-l:#4d4020; --blue-l:#203c5c; --red-l:#552a35;
+  --shadow:0 6px 0 rgba(0,0,0,.35), 0 14px 30px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Mali','Mitr',sans-serif; color:var(--ink); font-size:17px; line-height:1.75; background:var(--bg);
+  background-image:radial-gradient(circle at 8% 6%, var(--pink-l) 0 140px, transparent 141px),
+  radial-gradient(circle at 94% 28%, var(--purple-l) 0 180px, transparent 181px),
+  radial-gradient(circle at 15% 92%, var(--mint-l) 0 150px, transparent 151px);
+  background-attachment:fixed; min-height:100vh; overflow-x:hidden}
+h1,h2,h3,h4,.btn,.seg button,.badge,.pill,.chip,.mono{font-family:'Mitr',sans-serif}
+.wrap{max-width:1100px; margin:0 auto; padding:16px}
+button{font:inherit}
+.view{display:none}.view.on{display:block; animation:pop .35s ease}
+@keyframes pop{from{opacity:0; transform:translateY(10px)}}
+
+/* ---------- hero ---------- */
+.hero{display:grid; grid-template-columns:1.25fr 1fr; gap:20px; background:var(--card); border-radius:32px; padding:28px; box-shadow:var(--shadow); border:2px solid var(--line); position:relative}
+.hero h1{font-size:clamp(30px,5.4vw,54px); line-height:1.12; margin:6px 0 10px; font-weight:700}
+.hero h1 .hl{background:linear-gradient(120deg,var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.hero .sub{color:var(--soft); font-size:18px; margin:0 0 16px}
+.kicker{display:inline-flex; gap:6px; align-items:center; font-family:'Mitr'; font-size:14px; background:var(--pink-l); color:var(--pink-d); padding:4px 12px; border-radius:999px}
+.steps3{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:'Mitr'; font-weight:600; font-size:15px; color:var(--purple-d)}
+.steps3 i{display:block; width:34px; height:2px; background:var(--line); border-radius:2px}
+.steps3 b{color:var(--pink)}
+.examstrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px}
+.examstrip span{font-family:'Mitr'; font-size:14px; background:var(--bg2); padding:6px 12px; border-radius:12px}
+.examstrip span.star{background:var(--yellow-l); color:#8a5d00}
+.heroR{background:linear-gradient(140deg,var(--pink),var(--purple)); border-radius:26px; padding:22px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; gap:14px; min-height:250px}
+.heroR .bub{position:absolute; border-radius:50%; background:rgba(255,255,255,.16)}
+.pcard{background:#fff; color:#3b2f4a; border-radius:22px; padding:18px; transform:rotate(-2deg); box-shadow:0 10px 24px rgba(60,30,90,.25); position:relative}
+.pcard h4{margin:0; font-size:20px}
+.pcard .row{display:flex; justify-content:space-between; align-items:baseline; font-family:'Mitr'; font-size:14px; margin-top:10px}
+.pcard .row b{font-size:22px; color:var(--pink-d)}
+.pbar{height:12px; background:#f1eaff; border-radius:999px; overflow:hidden; margin:6px 0}
+.pbar>div{height:100%; background:linear-gradient(90deg,var(--pink),var(--purple)); border-radius:999px; width:0; transition:width .6s}
+.pcard .foot{font-size:13px; color:#7a6b8c; font-family:'Mitr'}
+.mascot{position:absolute; right:14px; bottom:10px; width:62px; height:62px; border-radius:50% 50% 46% 46%; background:#fff; box-shadow:inset 0 -7px 0 #ffe1ef; animation:bob 2.4s ease-in-out infinite; z-index:2}
+.mascot::before,.mascot::after{content:""; position:absolute; top:24px; width:8px; height:10px; background:#3b2f4a; border-radius:50%}
+.mascot::before{left:17px}.mascot::after{right:17px}
+.mascot .ck{position:absolute; top:36px; width:11px; height:6px; border-radius:50%; background:#ffb3d1}.mascot .ck.l{left:8px}.mascot .ck.r{right:8px}
+.mascot .mo{position:absolute; left:50%; top:37px; width:12px; height:7px; border:3px solid #3b2f4a; border-top:none; border-radius:0 0 12px 12px; transform:translateX(-50%)}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+.heroBtns{display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1}
+.theme-btn{position:absolute; top:14px; right:14px; z-index:3; width:40px; height:40px; border:none; border-radius:50%; background:var(--bg2); cursor:pointer; font-size:18px}
+
+/* ---------- buttons ---------- */
+.btn{border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:600; cursor:pointer; color:#fff; background:var(--pink); box-shadow:0 5px 0 var(--pink-d); transition:.1s; display:inline-flex; align-items:center; gap:8px; white-space:nowrap}
+.btn:active{transform:translateY(4px); box-shadow:0 1px 0 var(--pink-d)}
+.btn.purple{background:var(--purple); box-shadow:0 5px 0 var(--purple-d)}
+.btn.mint{background:var(--mint); box-shadow:0 5px 0 var(--mint-d)}
+.btn.white{background:#fff; color:var(--purple-d); box-shadow:0 5px 0 rgba(0,0,0,.15)}
+.btn.ghost{background:var(--card); color:var(--ink); border:2px solid var(--line); box-shadow:0 5px 0 var(--line)}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn.sm{padding:8px 14px; font-size:14px; border-radius:12px}
+
+/* ---------- topic list ---------- */
+.secHead{display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin:30px 0 14px}
+.secHead h2{margin:0; font-size:clamp(26px,4vw,36px)}
+.secHead h2 small{font-size:16px; color:var(--soft); font-weight:400; margin-left:8px}
+.seg{display:flex; background:var(--bg2); padding:6px; border-radius:20px; border:2px solid var(--line); flex-wrap:wrap}
+.seg button{border:none; background:transparent; color:var(--soft); font-size:15px; font-weight:600; padding:10px 16px; border-radius:15px; cursor:pointer}
+.seg button.on{background:var(--card); color:var(--ink); box-shadow:0 3px 10px rgba(155,123,255,.18)}
+.topic{display:flex; align-items:center; gap:20px; background:var(--card); border:2px solid var(--line); border-radius:26px; padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow); transition:.15s}
+.topic:hover{transform:translateY(-3px)}
+.badge{flex:0 0 64px; height:64px; border-radius:18px; display:grid; place-items:center; font-size:22px; font-weight:700}
+.t-ev .badge{background:var(--pink-l); color:var(--pink-d)}
+.t-dt .badge{background:var(--mint-l); color:var(--mint-d)}
+.t-nb .badge{background:var(--purple-l); color:var(--purple-d)}
+.t-ar .badge{background:var(--yellow-l); color:var(--yellow-d)}
+.topic .mid{flex:1; min-width:0}
+.topic h3{margin:0; font-size:21px; line-height:1.35}
+.topic .kw{color:var(--soft); font-size:16px; margin:2px 0 8px}
+.pill{display:inline-block; font-size:13.5px; background:var(--bg2); padding:4px 12px; border-radius:999px; margin:2px 4px 2px 0}
+.pill.hot{background:var(--yellow-l); color:#8a5d00}
+.pill.good{background:var(--mint-l); color:var(--mint-d)}
+
+/* ---------- generic card ---------- */
+.card{background:var(--card); border-radius:26px; padding:22px; margin-bottom:16px; box-shadow:var(--shadow); border:2px solid var(--line)}
+.card h2{margin:0 0 8px; font-size:24px}
+.card h3{margin:18px 0 6px; font-size:19px; color:var(--purple-d)}
+.card h3:first-child{margin-top:0}
+.topbar{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap}
+.back{border:none; background:var(--card); border:2px solid var(--line); border-radius:14px; padding:8px 14px; cursor:pointer; font-family:'Mitr'; color:var(--ink)}
+.formula{background:var(--blue-l); border-radius:16px; padding:10px 16px; margin:10px 0; font-family:'Mitr'; font-size:17px; text-align:center; border:2px dashed var(--blue)}
+.note{border-radius:16px; padding:12px 16px; margin:12px 0; font-size:16px}
+.note.hot{background:var(--yellow-l); border-left:8px solid var(--yellow)}
+.note.warn{background:var(--red-l); border-left:8px solid var(--red)}
+.note.tip{background:var(--mint-l); border-left:8px solid var(--mint)}
+.note b.h{font-family:'Mitr'; display:block}
+.gloss{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; margin:10px 0}
+.gloss div{background:var(--bg2); border-radius:16px; padding:10px 14px; font-size:15.5px}
+.gloss b{font-family:'Mitr'; color:var(--pink-d); display:block}
+.tblw{overflow-x:auto; margin:10px 0}
+table{border-collapse:separate; border-spacing:0; width:100%; font-size:15px; background:var(--card); border-radius:14px; overflow:hidden; border:2px solid var(--line)}
+th,td{padding:7px 10px; text-align:center; border-bottom:1px solid var(--line)}
+th{background:var(--purple-l); font-family:'Mitr'; font-weight:500}
+tr:last-child td{border-bottom:none}
+.c-tp{background:var(--mint-l)}.c-fp{background:var(--red-l)}.c-fn{background:var(--yellow-l)}.c-tn{background:var(--blue-l)}
+ul,ol{padding-left:22px; margin:6px 0} li{margin:3px 0}
+.svgbox{background:var(--bg2); border-radius:18px; padding:10px; margin:10px 0; overflow-x:auto}
+.svgbox svg{display:block; margin:0 auto; max-width:100%; height:auto}
+
+/* ---------- quiz ---------- */
+.qtop{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-family:'Mitr'; font-size:15px}
+.bar{height:14px; background:var(--purple-l); border-radius:999px; overflow:hidden; margin:10px 0 14px}
+.bar>div{height:100%; width:0; background:linear-gradient(90deg,var(--pink),var(--purple)); border-radius:999px; transition:width .4s}
+.qtext{font-size:20px; font-weight:600; margin:10px 0; line-height:1.6}
+.opts{display:grid; gap:10px; margin-top:10px}
+.opt{display:flex; gap:12px; align-items:flex-start; text-align:left; font-family:'Mali'; font-size:17px; color:var(--ink); background:var(--card); border:3px solid var(--line); border-radius:18px; padding:12px 14px; cursor:pointer; transition:.15s; line-height:1.55}
+.opt:hover:not(:disabled){border-color:var(--purple); transform:translateX(4px)}
+.opt .k{flex:0 0 32px; height:32px; border-radius:10px; background:var(--purple-l); color:var(--purple-d); font-family:'Mitr'; text-align:center; line-height:32px; font-weight:600}
+.opt.right{border-color:var(--mint); background:var(--mint-l)}.opt.right .k{background:var(--mint); color:#fff}
+.opt.wrong{border-color:var(--red); background:var(--red-l); animation:shake .35s}.opt.wrong .k{background:var(--red); color:#fff}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.explain{margin-top:14px; border-radius:18px; padding:14px 16px; display:none; font-size:16px}
+.explain.show{display:block; animation:pop .3s}
+.explain.ok{background:var(--mint-l); border:2px solid var(--mint)}
+.explain.no{background:var(--red-l); border:2px solid var(--red)}
+.explain .verdict{font-family:'Mitr'; font-size:18px; margin-bottom:4px}
+.qnav{display:flex; justify-content:space-between; margin-top:16px; gap:8px}
+.bigscore{font-family:'Mitr'; font-size:72px; font-weight:700; color:var(--pink); line-height:1; text-align:center}
+.statgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0}
+.statgrid div{background:var(--bg2); border-radius:16px; padding:10px; text-align:center; font-family:'Mitr'}
+.statgrid b{display:block; font-size:26px; color:var(--purple-d)}
+.reviewItem{border-left:6px solid var(--red); padding:10px 14px; margin:10px 0; background:var(--bg2); border-radius:12px; font-size:15.5px}
+
+/* ---------- flashcards ---------- */
+.fgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
+.flip{perspective:900px; height:190px; cursor:pointer}
+.flip .in{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:22px; padding:16px; display:flex; flex-direction:column; justify-content:center; border:2px solid var(--line); box-shadow:var(--shadow)}
+.flip .f{background:var(--card); text-align:center; align-items:center}
+.flip .f b{font-family:'Mitr'; font-size:21px; line-height:1.3}
+.flip .f small{color:var(--soft); font-size:13px; margin-top:6px}
+.flip .b{background:var(--purple-l); transform:rotateY(180deg); font-size:15px; line-height:1.55; overflow:auto}
+
+/* ---------- writing ---------- */
+.wq{border:2px solid var(--line); border-radius:22px; padding:18px; margin-bottom:14px; background:var(--card); box-shadow:var(--shadow)}
+.wq h3{margin:4px 0 8px; font-size:19px}
+textarea{width:100%; min-height:130px; border-radius:16px; border:2px solid var(--line); background:var(--bg); color:var(--ink); padding:12px; font-family:'Mali'; font-size:16px; line-height:1.6}
+.kwrow{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0}
+.kwrow span{font-family:'Mitr'; font-size:13.5px; padding:4px 10px; border-radius:999px; background:var(--bg2); color:var(--soft); border:2px dashed var(--line)}
+.kwrow span.hit{background:var(--mint-l); color:var(--mint-d); border:2px solid var(--mint)}
+.model{display:none; background:var(--bg2); border-radius:16px; padding:12px 16px; margin-top:10px; font-size:16px}
+.model.show{display:block; animation:pop .3s}
+.wtools{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+
+.confetti{position:fixed; top:-12px; width:10px; height:14px; z-index:99; pointer-events:none; border-radius:3px; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%) scale(.8); background:var(--ink); color:var(--bg); font-family:'Mitr'; padding:10px 20px; border-radius:999px; opacity:0; transition:.25s; z-index:100; pointer-events:none}
+.toast.show{opacity:1; transform:translateX(-50%) scale(1)}
+footer{text-align:center; color:var(--soft); font-size:13px; padding:24px 0 40px}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr; padding:20px}
+  .heroR{min-height:0}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .topic{flex-wrap:wrap; gap:14px; padding:16px}
+  .badge{flex-basis:52px; height:52px; font-size:19px}
+  .topic .mid{flex-basis:calc(100% - 70px)}
+  .topic .go{width:100%}.topic .go .btn{width:100%; justify-content:center}
+  .seg{width:100%}.seg button{flex:1; padding:9px 6px; font-size:14px}
+  .card{padding:16px}
+  .qtext{font-size:17.5px}
+  .bigscore{font-size:56px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= HOME ================= -->
+<section class="view on" id="v-home">
+  <header class="hero">
+    <button class="theme-btn" id="themeBtn" title="สลับโหมดมืด/สว่าง">🌙</button>
+    <div>
+      <span class="kicker">✨ Data Mining · ปลายภาค</span>
+      <h1>ทบทวนก่อนสอบ<br><span class="hl">ให้เข้าใจ ไม่ต้องท่อง</span></h1>
+      <p class="sub">อ่านสรุป ลองตอบ รู้จุดที่ควรทวน</p>
+      <div class="steps3"><span><b>01</b> อ่าน</span><i></i><span><b>02</b> ลองตอบ</span><i></i><span><b>03</b> ทบทวน</span></div>
+      <div class="examstrip">
+        <span>📝 ช้อยส์ 60 ข้อ</span><span>✍️ ข้อเขียน 2 ข้อ</span><span>💬 ข้อเขียน = อธิบายคีย์เวิร์ด</span><span>🧮 ไม่มีข้อคำนวณ</span><span class="star">⭐ เน้นบทวัดผลโมเดล</span>
+      </div>
+    </div>
+    <div class="heroR">
+      <span class="bub" style="width:150px;height:150px;right:-40px;top:-50px"></span>
+      <span class="bub" style="width:90px;height:90px;left:-20px;bottom:-30px"></span>
+      <div class="pcard">
+        <h4>ความคืบหน้าของคาเด็ท</h4>
+        <div class="row"><span>ทำแบบทดสอบครบ</span><span><b id="doneCount">0</b>/4 บท</span></div>
+        <div class="pbar"><div id="doneBar"></div></div>
+        <div class="row"><span>จำลองสอบ 60 ข้อ · ดีที่สุด</span><span><b id="mockBest">–</b></span></div>
+        <div class="foot" id="doneFoot">เริ่มจากบทไหนก็ได้ สู้ ๆ!</div>
+      </div>
+      <div class="heroBtns">
+        <button class="btn white" id="goMock">🏁 จำลองสอบ 60 ข้อ</button>
+        <button class="btn white" id="goWrite">✍️ ฝึกข้อเขียน</button>
+      </div>
+      <div class="mascot"><span class="ck l"></span><span class="ck r"></span><span class="mo"></span></div>
+    </div>
+  </header>
+
+  <div class="secHead">
+    <h2>หัวข้อทบทวน <small>4 บท</small></h2>
+    <div class="seg" id="modeSeg">
+      <button class="on" data-m="quiz">ทำแบบทดสอบ</button>
+      <button data-m="read">อ่านแต่ละบท</button>
+      <button data-m="cards">การ์ดคีย์เวิร์ด</button>
+    </div>
+  </div>
+  <div id="topicList"></div>
+</section>
+
+<!-- ================= READ ================= -->
+<section class="view" id="v-read">
+  <div class="topbar"><button class="back" data-home>← กลับหน้าหลัก</button><span class="pill" id="readTag"></span></div>
+  <div id="readBody"></div>
+  <div style="text-align:center"><button class="btn" id="readToQuiz">อ่านจบแล้ว ลองทำแบบทดสอบบทนี้ →</button></div>
+</section>
+
+<!-- ================= CARDS ================= -->
+<section class="view" id="v-cards">
+  <div class="topbar"><button class="back" data-home>← กลับหน้าหลัก</button><span class="pill" id="cardTag"></span></div>
+  <div class="card"><h2 id="cardTitle"></h2><p style="margin:0">แตะการ์ดเพื่อพลิกดูความหมาย ลองพูดหรือเขียนความหมายเองก่อนพลิก เป็นการซ้อมข้อเขียนแบบอธิบายคีย์เวิร์ดไปในตัว 💡</p>
+  <div style="margin-top:10px"><button class="btn sm purple" id="flipAll">พลิกทั้งหมด</button> <button class="btn sm ghost" id="shufCards">สลับลำดับ</button></div></div>
+  <div class="fgrid" id="cardGrid"></div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="view" id="v-quiz">
+  <div class="card">
+    <div class="qtop">
+      <span class="pill" id="qNum"></span><span class="pill" id="qCh"></span><span class="pill">✅ <span id="qScore">0</span> · 🔥 <span id="qStreak">0</span></span>
+    </div>
+    <div class="bar"><div id="qBar"></div></div>
+    <div class="qtext" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="explain" id="qExp"></div>
+    <div class="qnav"><button class="btn ghost" id="quitBtn">ออก</button><button class="btn purple" id="nextBtn" disabled>ข้อต่อไป ➜</button></div>
+  </div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section class="view" id="v-result">
+  <div class="card" style="text-align:center">
+    <div style="font-size:56px" id="endEmoji">🎉</div>
+    <h2 id="endTitle"></h2>
+    <div class="bigscore" id="endScore"></div>
+    <div class="statgrid"><div><b id="stC">0</b>ถูก</div><div><b id="stW">0</b>ผิด</div><div><b id="stS">0</b>สตรีคสูงสุด</div></div>
+    <div id="chBreak"></div>
+    <div style="margin-top:14px"><button class="btn" id="retryWrong">ทำเฉพาะข้อที่ผิด 🔁</button> <button class="btn purple" id="againBtn">ทำใหม่อีกรอบ</button> <button class="btn ghost" data-home>หน้าหลัก</button></div>
+  </div>
+  <div id="review"></div>
+</section>
+
+<!-- ================= WRITE ================= -->
+<section class="view" id="v-write">
+  <div class="topbar"><button class="back" data-home>← กลับหน้าหลัก</button></div>
+  <div class="card">
+    <h2>ฝึกข้อเขียน: อธิบายคีย์เวิร์ด ✍️</h2>
+    <p style="margin:4px 0">ข้อสอบจริงมีข้อเขียน 2 ข้อ เป็นการเขียนอธิบาย ไม่มีคำนวณ วิธีฝึกคือเขียนคำตอบลงช่อง แล้วกด <b>"ตรวจคีย์เวิร์ด"</b> ชีฟจะไฮไลต์ว่าใส่คำสำคัญครบหรือยัง จากนั้นค่อยเปิดแนวคำตอบมาเทียบ</p>
+    <div class="note tip"><b class="h">💡 สูตรเขียนให้ได้คะแนนเต็ม</b>① บอกความหมาย (คืออะไร) → ② บอกหลักการ/สูตรแบบคำพูด → ③ ยกตัวอย่างสั้น ๆ 1 ตัวอย่าง → ④ ใช้คำศัพท์อังกฤษตามสไลด์ แล้วกำกับภาษาไทย</div>
+    <div class="wtools"><button class="btn" id="mockWrite">🎲 สุ่ม 2 ข้อเหมือนสอบจริง</button><button class="btn ghost" id="allWrite">แสดงทั้งหมด</button></div>
+  </div>
+  <div id="writeList"></div>
+</section>
+
+<footer>สรุปจากสไลด์วิชาเหมืองข้อมูล (04-524-326) · บทวัดผลโมเดล, Decision Tree, Naïve Bayes, Association Rule · สู้ ๆ นะคาเด็ท 💜</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ======================= DATA ======================= */
+const CH={
+ ev:{n:'01',title:'การประเมินผลและวัดประสิทธิภาพโมเดล',kw:'Confusion Matrix · Precision · Recall · F-measure · Accuracy',hot:true,mock:24},
+ dt:{n:'02',title:'การจำแนกข้อมูลด้วย Decision Tree',kw:'Root / Leaf · Entropy · Information Gain · Pruning',mock:12},
+ nb:{n:'03',title:'การจำแนกข้อมูลด้วย Naïve Bayes',kw:'Bayes Theorem · Prior · Likelihood · Posterior',mock:12},
+ ar:{n:'04',title:'การหากฎความสัมพันธ์ (Association Rule)',kw:'Market Basket · Apriori · Support · Confidence',mock:12}
+};
+const ORDER=['ev','dt','nb','ar'];
+
+/* ---------- reading content ---------- */
+const READ={
+ev:`
+<div class="card"><h2>🎯 ประเมินโมเดลไปทำไม?</h2>
+<p>สร้างโมเดลเสร็จแล้วยังเอาไปใช้เลยไม่ได้ ต้อง<b>เช็กว่าโมเดลดีพอจะนำไปใช้งานได้หรือยัง</b> โดยดูจากความแม่นยำและความถูกต้อง เพราะงานนี้เป็นหลักวิทยาศาสตร์และคณิตศาสตร์ จึงต้อง<b>พิสูจน์ได้ด้วยตัวเลข</b>ว่าดีจริง</p>
+<p>ตัววัดยอดนิยมของโมเดล <b>Classification</b> มี 4 ตัว และทุกตัวคำนวณมาจากตาราง <b>Confusion Matrix</b></p>
+<div class="gloss">
+<div><b>Precision (ความแม่นยำ)</b>ดูแยกทีละคลาส · เอา TP มาเทียบกับ FP</div>
+<div><b>Recall (ความครบถ้วน)</b>ดูแยกทีละคลาส · เอา TP มาเทียบกับ FN</div>
+<div><b>F-measure</b>วัด Precision และ Recall พร้อมกัน · ดูทีละคลาส</div>
+<div><b>Accuracy (ความถูกต้อง)</b>ดู<u>รวมทุกคลาส</u> · ทายถูกกี่ส่วนจากทั้งหมด</div>
+</div></div>
+
+<div class="card"><h2>🧩 Confusion Matrix</h2>
+<p><b>Confusion Matrix</b> คือตารางที่เทียบ <b>"สิ่งที่โมเดลทำนาย (Predicted)"</b> กับ <b>"สิ่งที่เกิดขึ้นจริง (Actual / Ground Truth)"</b> ว่าตรงกันมากน้อยแค่ไหน เป็นเครื่องมือสำคัญในการวัดความสามารถของ Machine Learning ในการแก้ปัญหา <b>classification</b></p>
+<div class="tblw"><table>
+<tr><th>Predicted \\ Actual</th><th>Positive (จริงใช่)</th><th>Negative (จริงไม่ใช่)</th></tr>
+<tr><th>ทายว่า Positive</th><td class="c-tp"><b>TP</b> · ทายใช่ ✔ ใช่จริง</td><td class="c-fp"><b>FP</b> · ทายใช่ ✘ แต่ไม่ใช่</td></tr>
+<tr><th>ทายว่า Negative</th><td class="c-fn"><b>FN</b> · ทายไม่ใช่ ✘ แต่ใช่</td><td class="c-tn"><b>TN</b> · ทายไม่ใช่ ✔ ไม่ใช่จริง</td></tr>
+</table></div>
+<div class="note hot"><b class="h">⭐ ตามสไลด์อาจารย์</b>แถว = ผลการทำนาย (Predicted) · คอลัมน์ = ผลเฉลย (Actual)</div>
+<h3>ความหมาย 4 ช่อง + ชื่อเล่น (ออกบ่อยมาก!)</h3>
+<ul>
+<li><b>True Positive (TP)</b> ทายว่าใช่ แล้วใช่จริง → <b>Hit</b></li>
+<li><b>True Negative (TN)</b> ทายว่าไม่ใช่ แล้วไม่ใช่จริง → <b>Correct Rejection</b></li>
+<li><b>False Positive (FP)</b> ทายว่าใช่ แต่จริง ๆ ไม่ใช่ → <b>False Alarm</b> / <b>Type I error</b></li>
+<li><b>False Negative (FN)</b> ทายว่าไม่ใช่ แต่จริง ๆ ใช่ → <b>Miss</b> / <b>Type II error</b></li>
+<li><b>Condition Positive (P)</b> ของที่ใช่ทั้งหมดในข้อมูล = TP + FN</li>
+<li><b>Condition Negative (N)</b> ของที่ไม่ใช่ทั้งหมดในข้อมูล = FP + TN</li>
+</ul>
+<div class="note tip"><b class="h">💡 ทริคจำ</b>คำแรก True/False = โมเดล<b>ทายถูกหรือผิด</b> · คำหลัง Positive/Negative = โมเดล<b>ทายว่าอะไร</b><br>False Negative = ทายว่า Negative แล้วผิด → ของจริงคือ Positive ที่โมเดล "พลาด" (Miss)</div>
+<h3>ตัวอย่างหมา–แมว 🐶🐱 (Positive = Dog)</h3>
+<ul><li>หมา ถูกทายว่าหมา → <b>TP</b></li><li>แมว ถูกทายว่าหมา → <b>FP</b> (เตือนผิด)</li><li>หมา ถูกทายว่าแมว → <b>FN</b> (พลาด)</li><li>แมว ถูกทายว่าแมว → <b>TN</b></li></ul>
+<div class="note warn"><b class="h">⚠️ ระวังสไลด์</b>ข้อความบรรยายในหน้าหมา–แมวสลับคำอธิบาย FP กับ FN ให้ยึดตามตาราง/รูปภาพ และนิยามข้างบนนี้</div>
+</div>
+
+<div class="card"><h2>📐 4 ตัววัด: ความหมายแบบเข้าใจง่าย</h2>
+<h3>Precision · "ที่ทายว่าใช่ ถูกจริงกี่ส่วน"</h3>
+<div class="formula">Precision = TP / (TP + FP)</div>
+<p>จำนวนครั้งที่ทายว่า Positive แล้วถูก ÷ จำนวนครั้งที่ทายว่า Positive ทั้งหมด → พิจารณาจาก <b>ผลการทำนาย</b> เป็นหลัก · FP ยิ่งน้อย Precision ยิ่งสูง</p>
+<h3>Recall · "ของจริงที่ใช่ เก็บได้หมดแค่ไหน"</h3>
+<div class="formula">Recall = TP / (TP + FN)</div>
+<p>จำนวนครั้งที่ทายว่า Positive แล้วถูก ÷ จำนวน Positive ทั้งหมดในข้อมูล → พิจารณาจาก <b>ผลเฉลย</b> เป็นหลัก · FN ยิ่งน้อย Recall ยิ่งสูง</p>
+<h3>Accuracy · "ทายแม่นแค่ไหนแบบรวม ๆ"</h3>
+<div class="formula">Accuracy = (TP + TN) / (TP + TN + FP + FN)</div>
+<p>จำนวนครั้งที่ทายถูก ÷ จำนวนครั้งที่ทายทั้งหมด → พิจารณา <b>รวมทุกคลาส</b></p>
+<h3>F-measure · "ค่าเฉลี่ยของ Precision กับ Recall"</h3>
+<div class="formula">F = 2 × (Precision × Recall) / (Precision + Recall)</div>
+<p>รวมสองค่าไว้ในตัวเลขเดียว (เป็นค่าเฉลี่ยแบบ harmonic) ถ้าตัวใดตัวหนึ่งต่ำ F จะต่ำตาม จึงใช้ดูว่าโมเดล <b>สมดุล</b> ทั้งความแม่นและความครบหรือไม่</p>
+<div class="note warn"><b class="h">⚠️ สไลด์ขัดกันเอง</b>หน้าแรกเขียนว่า Accuracy "พิจารณาแยกทีละคลาส" แต่หน้าสูตรเขียน <b>"พิจารณารวมทุกคลาส"</b> → คำตอบที่ถูกคือ <b>รวมทุกคลาส</b> (Precision, Recall, F-measure คือตัวที่ดูแยกทีละคลาส)</div>
+<div class="note hot"><b class="h">⭐ ประโยคทองจากสไลด์</b><b>Precision</b> พิจารณาจาก<u>ผลการทำนาย</u>เป็นหลัก · <b>Recall</b> พิจารณาจาก<u>ผลเฉลย</u>เป็นหลัก<br>ตัวอย่างป้ายจราจร: "ทำนายว่าเป็นป้าย 6 อัน ถูก 5" คือมุม Precision · "ป้ายจริงมี 7 อัน จับได้ 5" คือมุม Recall</div>
+</div>
+
+<div class="card"><h2>🤔 เลือกใช้ตัววัดไหนดี? (ข้อสอบแนวคิดชอบถาม)</h2>
+<div class="gloss">
+<div><b>เน้น Recall</b>เมื่อ "พลาดของจริงไม่ได้" (FN แพง) เช่น คัดกรองโรคร้ายแรง ตรวจจับคนร้าย ตรวจจับการทุจริต</div>
+<div><b>เน้น Precision</b>เมื่อ "เตือนผิดไม่ได้" (FP แพง) เช่น กรอง spam ที่ไม่อยากให้เมลสำคัญหายไปอยู่ในถังขยะ</div>
+<div><b>ดู F-measure</b>เมื่ออยากได้ทั้งแม่นและครบ หรือ Precision กับ Recall ขัดกัน</div>
+<div><b>ระวัง Accuracy</b>ถ้าข้อมูลไม่สมดุล (คลาสหนึ่งมีมากกว่ามาก) โมเดลที่ทายคลาสใหญ่ตลอดได้ Accuracy สูงแต่ใช้งานไม่ได้</div>
+</div>
+<ul>
+<li>Precision สูง แต่ Recall ต่ำ → ทายว่าใช่ไม่ค่อยบ่อย แต่ทายทีไรถูก <b>พลาดของจริงไปเยอะ</b></li>
+<li>Recall สูง แต่ Precision ต่ำ → จับของจริงได้เกือบหมด แต่ <b>เตือนผิดบ่อย</b></li>
+<li>ทุกตัววัดมีค่าระหว่าง 0–1 (0–100%) ยิ่งสูงยิ่งดี</li>
+</ul></div>
+
+<div class="card"><h2>🔁 เปลี่ยนคลาสที่พิจารณา & กรณีหลายคลาส</h2>
+<p>ตัวอย่างอีเมล spam/normal ในสไลด์ ถ้าพิจารณา <b>normal</b> เป็นคลาสหลัก แล้วเปลี่ยนไปพิจารณา <b>spam</b> ช่องจะ <b>สลับกัน: TP ↔ TN และ FP ↔ FN</b> ดังนั้นค่า Precision/Recall ของแต่ละคลาสจะไม่เท่ากัน แต่ <b>Accuracy เท่าเดิม</b> เพราะดูรวมทุกคลาส</p>
+<p>ใน Confusion Matrix แบบ <b>หลายคลาส</b> (เช่น เสือ ช้าง แรด ในใบงาน):</p>
+<ul>
+<li><b>TP</b> ของแต่ละคลาส = ช่อง<b>เส้นทแยงมุม</b></li>
+<li><b>Precision</b> = TP ÷ ผลรวม<b>แถว</b> (ที่ทายว่าเป็นคลาสนั้น)</li>
+<li><b>Recall</b> = TP ÷ ผลรวม<b>คอลัมน์</b> (ที่เป็นคลาสนั้นจริง)</li>
+<li><b>Accuracy</b> = ผลรวมเส้นทแยง ÷ ข้อมูลทั้งหมด</li>
+</ul>
+<p>ในโปรแกรม AI Studio ใช้ Operator <b>Performance</b> เพื่อวัดผลค่าเหล่านี้หลังจาก Apply Model</p></div>`,
+
+dt:`
+<div class="card"><h2>🌳 Decision Tree คืออะไร?</h2>
+<p><b>Decision Tree (ต้นไม้ตัดสินใจ)</b> คือเทคนิค <b>Classification</b> แบบ <b>Supervised Learning</b> ที่สร้างโมเดลออกมาเป็นโครงสร้างคล้ายต้นไม้กลับหัว ใช้ถามเงื่อนไขของแอตทริบิวต์ทีละขั้น จนได้คำตอบว่าข้อมูลอยู่คลาสไหน</p>
+<div class="svgbox"><svg viewBox="0 0 560 270" width="560" font-family="Mitr" font-size="14">
+<defs><style>.n{fill:#ece6ff;stroke:#9b7bff;stroke-width:2}.l1{fill:#d9f8ee;stroke:#2fc49a;stroke-width:2}.l0{fill:#ffe3e8;stroke:#ff6b81;stroke-width:2}.e{stroke:#bba9e8;stroke-width:2}.t{fill:#3b2f4a}.s{fill:#7a6b8c;font-size:12px}</style></defs>
+<line class="e" x1="280" y1="42" x2="100" y2="112"/><line class="e" x1="280" y1="42" x2="280" y2="112"/><line class="e" x1="280" y1="42" x2="460" y2="112"/>
+<line class="e" x1="100" y1="138" x2="50" y2="210"/><line class="e" x1="100" y1="138" x2="150" y2="210"/>
+<line class="e" x1="460" y1="138" x2="410" y2="210"/><line class="e" x1="460" y1="138" x2="510" y2="210"/>
+<rect class="n" x="225" y="14" width="110" height="34" rx="12"/><text class="t" x="280" y="36" text-anchor="middle">Outlook</text>
+<text class="s" x="168" y="72" text-anchor="middle">sunny</text><text class="s" x="300" y="80">overcast</text><text class="s" x="392" y="72" text-anchor="middle">rainy</text>
+<rect class="n" x="40" y="108" width="120" height="34" rx="12"/><text class="t" x="100" y="130" text-anchor="middle">Humidity</text>
+<rect class="l1" x="240" y="108" width="80" height="34" rx="17"/><text class="t" x="280" y="130" text-anchor="middle">yes</text>
+<rect class="n" x="405" y="108" width="110" height="34" rx="12"/><text class="t" x="460" y="130" text-anchor="middle">Windy</text>
+<text class="s" x="58" y="182" text-anchor="end">high</text><text class="s" x="146" y="182">normal</text>
+<text class="s" x="418" y="182" text-anchor="end">true</text><text class="s" x="496" y="182">false</text>
+<rect class="l0" x="15" y="206" width="70" height="32" rx="16"/><text class="t" x="50" y="227" text-anchor="middle">no</text>
+<rect class="l1" x="115" y="206" width="70" height="32" rx="16"/><text class="t" x="150" y="227" text-anchor="middle">yes</text>
+<rect class="l0" x="375" y="206" width="70" height="32" rx="16"/><text class="t" x="410" y="227" text-anchor="middle">no</text>
+<rect class="l1" x="475" y="206" width="70" height="32" rx="16"/><text class="t" x="510" y="227" text-anchor="middle">yes</text>
+<text class="s" x="280" y="262" text-anchor="middle">ตัวอย่างต้นไม้จากข้อมูลเล่นกอล์ฟ (Play = yes/no)</text>
+</svg></div>
+<div class="gloss">
+<div><b>Root Node (โหนดราก)</b>โหนดบนสุด เป็นแอตทริบิวต์แรกที่ใช้แบ่ง ซึ่งแบ่งข้อมูลได้ดีที่สุด</div>
+<div><b>Internal / Decision Node</b>โหนดภายใน ใช้ทดสอบเงื่อนไขของแอตทริบิวต์</div>
+<div><b>Branch (กิ่ง)</b>เส้นเชื่อมที่แทนค่าหรือผลของการทดสอบ เช่น sunny / rainy</div>
+<div><b>Leaf Node (โหนดใบ)</b>โหนดปลายสุด บอก<b>คลาสคำตอบ</b> เช่น yes / no</div>
+</div>
+<div class="note tip"><b class="h">💡 จุดเด่น: แปลงเป็นกฎได้</b>ทุกเส้นทางจาก Root ถึง Leaf อ่านเป็นกฎ <b>IF–THEN</b> ได้ เช่น IF Outlook = sunny AND Humidity = high THEN Play = no → อธิบายผลให้คนเข้าใจได้ง่าย</div>
+</div>
+
+<div class="card"><h2>⚙️ หลักการสร้างต้นไม้</h2>
+<ol>
+<li>เริ่มจากข้อมูลทั้งหมดที่ Root</li>
+<li>เลือกแอตทริบิวต์ที่<b>แบ่งข้อมูลได้ดีที่สุด</b> (Information Gain สูงสุด) มาเป็นโหนด</li>
+<li>แตกกิ่งตามค่าของแอตทริบิวต์นั้น แล้วแบ่งข้อมูลลงไปแต่ละกิ่ง</li>
+<li>ทำซ้ำกับแต่ละกิ่ง (แบ่งแล้วแบ่งอีก) — เป็นแบบ <b>Top-down, Divide and Conquer</b></li>
+<li><b>หยุด</b>เมื่อข้อมูลในโหนดเป็นคลาสเดียวกันหมด (บริสุทธิ์) หรือไม่มีแอตทริบิวต์ให้แบ่งต่อ หรือไม่มีข้อมูลเหลือ แล้วสร้างเป็น Leaf</li>
+</ol>
+<h3>Entropy · วัด "ความไม่บริสุทธิ์ / ความยุ่งเหยิง"</h3>
+<ul>
+<li>Entropy บอกว่าข้อมูลในกลุ่ม <b>ปนกันหลายคลาสแค่ไหน</b></li>
+<li><b>Entropy = 0</b> → ทุกตัวเป็นคลาสเดียวกัน (บริสุทธิ์ที่สุด)</li>
+<li><b>Entropy สูงสุด</b> (= 1 กรณี 2 คลาส) → แต่ละคลาสมีจำนวนเท่ากัน 50:50 (ปนกันที่สุด)</li>
+</ul>
+<h3>Information Gain · "แบ่งแล้วความยุ่งเหยิงลดลงเท่าไร"</h3>
+<ul>
+<li>Information Gain = Entropy ก่อนแบ่ง − Entropy เฉลี่ยหลังแบ่ง</li>
+<li>แอตทริบิวต์ที่ <b>Information Gain สูงที่สุด</b> ถูกเลือกเป็นโหนด (ตัวแรกสุดคือ Root)</li>
+<li>ในข้อมูลเล่นกอล์ฟ แอตทริบิวต์ที่ถูกเลือกเป็น Root คือ <b>Outlook</b></li>
+</ul>
+<div class="gloss">
+<div><b>ID3</b>อัลกอริทึมสร้างต้นไม้ที่ใช้ Entropy + Information Gain</div>
+<div><b>C4.5</b>พัฒนาต่อจาก ID3 ใช้ Gain Ratio รองรับข้อมูลตัวเลขต่อเนื่องได้</div>
+<div><b>CART</b>ใช้ Gini Index วัดความไม่บริสุทธิ์ สร้างต้นไม้แบบแบ่งสองทาง</div>
+</div></div>
+
+<div class="card"><h2>✂️ Overfitting และ Pruning</h2>
+<ul>
+<li><b>Overfitting</b> คือต้นไม้ที่ซับซ้อน/ลึกเกินไป จนจำแม้กระทั่ง noise ของข้อมูลสอน ผลคือ<b>แม่นมากกับข้อมูลสอน แต่ทำนายข้อมูลใหม่ได้ไม่ดี</b></li>
+<li><b>Pruning (การตัดแต่งกิ่ง)</b> คือการตัดกิ่งที่ไม่จำเป็นออก ทำให้ต้นไม้เล็กลง ลด Overfitting และทำนายข้อมูลใหม่ได้ดีขึ้น
+ <ul><li><b>Pre-pruning</b> หยุดแตกกิ่งตั้งแต่ระหว่างสร้าง (เช่น จำกัดความลึก)</li><li><b>Post-pruning</b> สร้างต้นไม้เต็มก่อน แล้วค่อยตัดกิ่งทีหลัง</li></ul></li>
+</ul>
+<h3>ข้อดี / ข้อเสีย</h3>
+<div class="gloss">
+<div><b>ข้อดี 👍</b>เข้าใจง่าย มองเห็นเป็นภาพ แปลงเป็นกฎ IF–THEN ได้ ใช้ได้ทั้งข้อมูลกลุ่มและตัวเลข ไม่ต้องเตรียมข้อมูลมาก</div>
+<div><b>ข้อเสีย 👎</b>เกิด Overfitting ได้ง่าย ไม่เสถียร (ข้อมูลเปลี่ยนนิดเดียวต้นไม้เปลี่ยนได้มาก) และ Information Gain มักชอบแอตทริบิวต์ที่มีค่าหลายแบบ</div>
+</div>
+<div class="note hot"><b class="h">⭐ เชื่อมกับบทวัดผล</b>หลังสร้างต้นไม้ ต้องวัดผลด้วย Confusion Matrix, Precision, Recall, F-measure, Accuracy เหมือนโมเดล Classification อื่น ๆ</div>
+<div class="note warn"><b class="h">📌 หมายเหตุจากชีฟ</b>บทนี้เขียนจากเนื้อหามาตรฐานของ Decision Tree เพราะยังไม่มีสไลด์ของอาจารย์ ถ้าคาเด็ทส่งสไลด์มา ชีฟจะปรับให้ตรงกับที่อาจารย์สอน</div>
+</div>`,
+
+nb:`
+<div class="card"><h2>🎲 Naïve Bayes คืออะไร?</h2>
+<ul>
+<li>ทฤษฎีคิดค้นโดย <b>Thomas Bayes</b></li>
+<li>เป็น<b>การเรียนรู้แบบมีผู้สอน (Supervised Learning)</b> อาศัยหลักการทางสถิติ คำนวณ "ความน่าจะเป็น" ของคำตอบ</li>
+<li>อิง <b>ทฤษฎีของเบย์ (Bayes Theorem)</b> · อัลกอริทึมไม่ซับซ้อน สร้างโมเดลง่าย</li>
+<li>แนวคิด: <b>วิเคราะห์ความน่าจะเป็นของสิ่งที่ยังไม่เกิด โดยคาดเดาจากสิ่งที่เคยเกิดขึ้นมาก่อน</b> — "เปลี่ยนอดีตให้เป็นการพยากรณ์อนาคต"</li>
+</ul>
+<div class="note tip"><b class="h">🔁 Flow</b>ข้อมูลในอดีต → การเรียนรู้ทางสถิติ (Supervised + Bayes) → พยากรณ์คำตอบ (จำแนกข้อมูลใหม่)</div></div>
+
+<div class="card"><h2>🧠 ความน่าจะเป็นที่ต้องรู้</h2>
+<div class="formula">ความน่าจะเป็น = จำนวนเหตุการณ์ที่สนใจ ÷ จำนวนเหตุการณ์ที่เป็นไปได้ทั้งหมด</div>
+<div class="gloss">
+<div><b>Conditional Probability · P(A|B)</b>ความน่าจะเป็นที่เหตุการณ์ B เกิดขึ้นก่อน แล้วเหตุการณ์ A ตามมา (อ่าน "|" ว่า "เมื่อรู้ว่า")</div>
+<div><b>Joint Probability · P(A ∩ B)</b>ความน่าจะเป็นที่ A และ B เกิดขึ้นร่วมกัน</div>
+<div><b>P(B)</b>ความน่าจะเป็นที่เหตุการณ์ B เกิดขึ้น</div>
+</div>
+<div class="formula">P(A|B) = P(A ∩ B) / P(B)</div>
+<p>ตัวอย่างยาในสไลด์: P(Capsule | R) คือ "ถ้ารู้แล้วว่าหยิบจากกล่อง R โอกาสได้แคปซูลเท่าไร" → ดูเฉพาะของในกล่อง R</p></div>
+
+<div class="card"><h2>📜 Bayes Theorem: 3 ส่วนสำคัญ</h2>
+<div class="formula">P(C|A) = P(A|C) × P(C) / P(A)<br><small style="font-family:Mali">A = แอตทริบิวต์ (attribute) · C = ค่าคลาส (class)</small></div>
+<div class="gloss">
+<div><b>Posterior · P(C|A)</b>"ความน่าจะเป็นที่ตามมา" — ข้อมูลที่มีแอตทริบิวต์ A จะมีคลาส C · <u>คือสิ่งที่เราต้องการทำนาย</u></div>
+<div><b>Likelihood · P(A|C)</b>"ความเป็นไปได้" — ในข้อมูลเทรนนิงที่มีคลาส C มีแอตทริบิวต์ A เท่าไร (A = a₁ ∩ a₂ ∩ … ∩ a_M)</div>
+<div><b>Prior · P(C)</b>"ความน่าจะเป็นที่ทราบมาก่อน" — สัดส่วนของคลาส C ในข้อมูล</div>
+<div><b>P(A)</b>ความน่าจะเป็นของเหตุการณ์ A (เท่ากันทุกคลาส)</div>
+</div>
+<div class="note hot"><b class="h">⭐ ทำนายอย่างไร</b>คำนวณ Posterior ของทุกคลาส → <b>คลาสที่ได้ค่ามากที่สุดคือคำตอบ</b> · เวลาเทียบคลาส ไม่ต้องหาร P(A) เพราะเท่ากันทุกคลาส</div>
+<div class="note tip"><b class="h">💡 ทำไมเรียก "Naïve" (ไร้เดียงสา)</b>เพราะ<b>สมมติว่าแต่ละแอตทริบิวต์เป็นอิสระต่อกัน</b> จึงเอา P(a₁|C) × P(a₂|C) × … มาคูณกันได้ตรง ๆ ทั้งที่ในความจริงแอตทริบิวต์อาจสัมพันธ์กัน</div>
+</div>
+
+<div class="card"><h2>⛳ ตัวอย่างในสไลด์: เล่นกอล์ฟไหม?</h2>
+<p>ข้อมูลย้อนหลัง 14 วัน · Features: <b>Outlook</b> (sunny/overcast/rainy) · <b>Temp</b> (hot/mild/cool) · <b>Humidity</b> (high/normal) · <b>Windy</b> (true/false) · Target: <b>Play</b> (yes/no)</p>
+<ol>
+<li>หา <b>Prior</b> P(C) ของแต่ละคลาส (สัดส่วนวันที่เล่น/ไม่เล่น)</li>
+<li>สร้าง<b>ตารางความน่าจะเป็น</b> P(แอตทริบิวต์ | คลาส) ของทุกค่า</li>
+<li>วันใหม่มาถึง → คูณ Likelihood ของทุกแอตทริบิวต์ × Prior แยกแต่ละคลาส</li>
+<li>เทียบกัน คลาสไหนมากกว่า = คำตอบ (ตัวอย่าง sunny, hot, high, false → ทำนายว่า <b>no</b>)</li>
+</ol>
+<div class="note warn"><b class="h">⚠️ ปัญหาค่าศูนย์ (Zero Frequency)</b>ในข้อมูลไม่มีวัน overcast ที่ไม่เล่นเลย → P(overcast | no) = 0 ทำให้ผลคูณของคลาส no เป็น 0 ทันที ไม่ว่าแอตทริบิวต์อื่นจะเป็นอะไร</div>
+</div>
+
+<div class="card"><h2>🌍 การประยุกต์ใช้ & Lab</h2>
+<div class="gloss">
+<div><b>Face Recognition</b>จดจำใบหน้า</div><div><b>Email Spam Detection</b>กรองอีเมลขยะ</div><div><b>Categorizing News</b>จัดหมวดหมู่ข่าว</div>
+<div><b>Sentiment Analysis</b>วิเคราะห์ความรู้สึก</div><div><b>Weather Prediction</b>พยากรณ์อากาศ</div><div><b>Medical Diagnosis</b>วินิจฉัยโรค</div><div><b>Digit Recognition</b>จดจำตัวเลข</div>
+</div>
+<h3>AI Studio (Blueprint 6 ขั้น)</h3>
+<ol>
+<li><b>Retrieve</b> — นำเข้าข้อมูลสภาพอากาศในอดีต</li>
+<li><b>Set Role</b> — กำหนดว่าคอลัมน์ Play คือเป้าหมาย (Target Label)</li>
+<li><b>Split Data</b> — แบ่งข้อมูลสำหรับสอนโมเดล และสำหรับทดสอบ</li>
+<li><b>Naïve Bayes</b> — สร้างตารางความน่าจะเป็น (Knowledge Base)</li>
+<li><b>Apply Model</b> — นำโมเดลไปพยากรณ์ข้อมูลชุดใหม่</li>
+<li><b>Performance</b> — วัดผลความแม่นยำ (เชื่อมกับบทวัดผลโมเดล)</li>
+</ol></div>`,
+
+ar:`
+<div class="card"><h2>🛒 Association Rule คืออะไร?</h2>
+<ul>
+<li>เทคนิค Data Mining ที่<b>ค้นหาความสัมพันธ์ของข้อมูลจากข้อมูลขนาดใหญ่</b> หารูปแบบที่เกิดขึ้นบ่อย ๆ (<b>frequent pattern</b>) แล้วนำไปวิเคราะห์หรือพยากรณ์</li>
+<li>นิยมใช้ใน<b>ธุรกิจค้าปลีก (retailing business)</b> เช่น ร้านสะดวกซื้อ ซูเปอร์มาร์เก็ต</li>
+<li>เรียกว่า <b>การวิเคราะห์ตะกร้าตลาด / ตะกร้าการซื้อ (Market Basket Analysis)</b> เพื่อศึกษาพฤติกรรมการซื้อของลูกค้า</li>
+<li>ฐานข้อมูลที่ใช้มักเป็น <b>Transaction Database</b> (1 แถว = 1 ตะกร้า/ใบเสร็จ)</li>
+<li>ข้อมูลต้องอยู่ในรูป <b>Nominal หรือ Ordinal เท่านั้น</b></li>
+<li>ตัวอย่างคลาสสิก: ลูกค้าที่ซื้อ<b>ผ้าอ้อม</b> ส่วนใหญ่จะซื้อ<b>เบียร์</b>ด้วย 🍼🍺</li>
+</ul>
+<h3>Market Basket Analysis 3 ขั้น</h3>
+<ol><li><b>สังเกตพฤติกรรม</b> — ดูการซื้อของลูกค้าแต่ละราย</li><li><b>วิเคราะห์ความสัมพันธ์</b> — หาสินค้าที่มักซื้อร่วมกัน</li><li><b>เพิ่มยอดขาย</b> — นำไปจัดชั้นวาง ออกโปรโมชัน</li></ol>
+<h3>เอาผลไปใช้ทำอะไร</h3>
+<div class="gloss">
+<div><b>จัดวางสินค้า</b>วางสินค้า LHS กับ RHS ไว้ใกล้กัน ให้ลูกค้าหยิบสะดวก</div>
+<div><b>ส่งเสริมการขาย</b>โปรซื้อคู่ (Bundling) หรือลดราคา RHS เมื่อซื้อ LHS</div>
+<div><b>แคตตาล็อกสินค้า</b>แนะนำ "Frequently Bought Together" แบบ Personalized</div>
+</div></div>
+
+<div class="card"><h2>🧾 จากใบเสร็จสู่ Transaction Database</h2>
+<p>ข้อมูลใน 1 ใบเสร็จ (POS): <b>รหัสการซื้อ (Transaction ID)</b> · ข้อมูลลักษณะลูกค้า · ปริมาณสินค้าที่ซื้อ · ข้อมูลประเภทสินค้าที่ขาย · จำนวนเงิน</p>
+<p>POS database เก็บ 1 แถวต่อ 1 สินค้า → แปลงเป็น Transaction database ด้วยการ <b>Group by ตามเวลาที่ซื้อสินค้า</b> ให้สินค้าในตะกร้าเดียวกันรวมเป็น 1 แถว</p></div>
+
+<div class="card"><h2>🔢 คำศัพท์หลัก</h2>
+<div class="gloss">
+<div><b>Item set</b>กลุ่มของสินค้าตั้งแต่ 1 ชนิดขึ้นไป เขียนแบบเซต เช่น {นม, ผัก}</div>
+<div><b>จำนวนรูปแบบ 2ᴺ − 1</b>สินค้า N ชนิดเขียน itemset ได้ 2ᴺ − 1 แบบ (ลบเซตว่าง) → ร้านจริงมีสินค้ามาก คำนวณทุกแบบด้วยมือ "เป็นไปไม่ได้"</div>
+<div><b>Frequent itemset</b>itemset ที่ผ่านเกณฑ์ minimum support แล้ว (ที่เกิดร่วมกันบ่อย)</div>
+<div><b>Association rule</b>กฎความสัมพันธ์ระหว่างกลุ่มสินค้า 2 กลุ่ม เขียนเป็น LHS ⇒ RHS</div>
+<div><b>LHS (Left-Hand Side)</b>ส่วนซ้าย/ส่วนก่อน (Trigger) เช่น {ขนมปัง}</div>
+<div><b>RHS (Right-Hand Side)</b>ส่วนขวา/ส่วนหลัง สินค้าที่ซื้อตาม เช่น {เนย}</div>
+<div><b>Binary partition</b>การแบ่ง itemset (ตั้งแต่ 2 ชนิดขึ้นไป) เป็นสองกลุ่ม เพื่อสร้างเป็นกฎ</div>
+</div>
+<p>{ขนมปัง} ⇒ {เนย} = ลูกค้าซื้อขนมปังแล้วจะซื้อเนยด้วย หรือพบเนยในตะกร้าที่มีขนมปัง</p></div>
+
+<div class="card"><h2>📊 Support vs Confidence</h2>
+<div class="tblw"><table>
+<tr><th></th><th>Support (ค่าสนับสนุน)</th><th>Confidence (ค่าความเชื่อมั่น)</th></tr>
+<tr><th>คืออะไร</th><td>เปอร์เซ็นต์ของ itemset ที่เกิดขึ้นในฐานข้อมูล</td><td>เปอร์เซ็นต์ที่ itemset ทั้งกฎเกิดขึ้น ต่อจำนวนที่ฝั่ง LHS เกิด</td></tr>
+<tr><th>วัดอะไร</th><td>ความนิยมภาพรวม (Popularity)</td><td>ความน่าเชื่อถือของกฎ (Reliability)</td></tr>
+<tr><th>ตอบคำถาม</th><td>"สินค้านี้ถูกซื้อบ่อยแค่ไหน เทียบกับตะกร้าทั้งหมด"</td><td>"ถ้าซื้อ A แล้ว โอกาสซื้อ B ตามมามีแค่ไหน"</td></tr>
+<tr><th>เทียบกับ</th><td>ทรานแซคชันทั้งหมด</td><td>เฉพาะตะกร้าที่มีสินค้าฝั่ง LHS</td></tr>
+</table></div>
+<div class="formula">Support = จำนวนทรานแซคชันที่ปรากฏ ÷ จำนวนทรานแซคชันทั้งหมด</div>
+<div class="formula">Confidence(LHS ⇒ RHS) = Support(LHS, RHS) ÷ Support(LHS)</div>
+<ul>
+<li><b>Minimum Support / Minimum Confidence</b> ผู้ใช้ระบบหรือผู้เชี่ยวชาญ (Expert user) เป็นคนกำหนด ขึ้นกับโจทย์และประสบการณ์</li>
+<li>Confidence = 100% → ซื้ออย่างแรกแล้ว<b>ต้องซื้ออย่างหลังเสมอ</b></li>
+<li>Confidence สูง → มั่นใจว่าถ้ามี LHS ในตะกร้า RHS ก็จะถูกหยิบไปด้วย</li>
+<li><b>กฎที่ดีต้องผ่านทั้ง minimum support และ minimum confidence</b></li>
+<li>สไลด์กล่าวถึงตัววัดอีกตัวคือ <b>lift</b></li>
+</ul>
+<div class="note warn"><b class="h">⚠️ สลับข้างแล้วค่าเปลี่ยน</b>Support ของ {A, B} เท่าเดิม แต่ Confidence(A⇒B) ≠ Confidence(B⇒A) เพราะตัวหารคือ Support ของฝั่ง LHS (ตัวอย่างสไลด์: โยเกิร์ต⇒นม 100% แต่ นม⇒โยเกิร์ต 75%)</div></div>
+
+<div class="card"><h2>⚙️ Apriori: 2 ขั้นตอนใหญ่</h2>
+<ol>
+<li><b>หา frequent itemsets</b> — หารูปแบบที่เกิดร่วมกันบ่อย ≥ minimum support มี 2 ขั้นย่อย
+ <ul><li><b>Join</b> — เอา itemset ที่ผ่านเกณฑ์มาสร้าง itemset ที่ยาวขึ้นทีละ 1</li><li><b>Count</b> — นับค่า support แล้ว<b>ตัด</b>ตัวที่ไม่ผ่านเกณฑ์ทิ้ง</li></ul></li>
+<li><b>สร้าง association rule</b> — นำ frequent itemsets (ตั้งแต่ 2 items) มาสร้างกฎ LHS ⇒ RHS แล้วกรองด้วย minimum confidence เช่น Apple ⇒ Cereal</li>
+</ol>
+<div class="note tip"><b class="h">💡 ทำไม Apriori ต้องตัดทิ้ง</b>เพื่อลดจำนวนรูปแบบที่ต้องคำนวณ (2ᴺ−1 มหาศาล) — itemset ที่ไม่บ่อยตั้งแต่แรก ถ้าเอาไปรวมกับสินค้าอื่นก็ไม่มีทางบ่อยขึ้น จึงตัดทิ้งได้เลย ("อัลกอริทึมกลั่นกรอง")</div>
+<p>ตัวอย่างในสไลด์ (10 ตะกร้า, min support 50%): ขนมปังมี support 40% จึงถูกตัด · กำหนด min confidence 75% กฎที่ผ่าน เช่น โยเกิร์ต ⇒ นม, นม ⇒ โยเกิร์ต, โยเกิร์ต,โซดา ⇒ นม</p>
+<h3>Lab AI Studio</h3>
+<p>Retrieve → Select Attributes → <b>Numerical to Binominal</b> (แปลงตัวเลขเป็นค่าจริง/เท็จ เพราะต้องใช้ข้อมูลแบบกลุ่ม) → <b>FP-Growth</b> (หา frequent itemsets) → <b>Create Association Rules</b> (สร้างกฎ)</p></div>`
+};
+
+/* ---------- keyword flashcards ---------- */
+const CARDS={
+ev:[["Confusion Matrix","ตารางเทียบผลที่โมเดลทำนาย (Predicted) กับค่าจริง (Actual) ใช้วัดประสิทธิภาพโมเดล Classification"],
+["True Positive (TP)","ทายว่าใช่ และใช่จริง (Hit)"],["True Negative (TN)","ทายว่าไม่ใช่ และไม่ใช่จริง (Correct Rejection)"],
+["False Positive (FP)","ทายว่าใช่ แต่จริง ๆ ไม่ใช่ (False Alarm, Type I error)"],["False Negative (FN)","ทายว่าไม่ใช่ แต่จริง ๆ ใช่ (Miss, Type II error)"],
+["Precision","ความแม่นยำ: ที่ทายว่า Positive ทั้งหมด ถูกจริงกี่ส่วน = TP/(TP+FP) ดูจากผลการทำนาย แยกทีละคลาส"],
+["Recall","ความครบถ้วน: ของ Positive จริงทั้งหมด โมเดลจับได้กี่ส่วน = TP/(TP+FN) ดูจากผลเฉลย แยกทีละคลาส"],
+["F-measure","ค่าเฉลี่ย (harmonic) ของ Precision และ Recall ใช้ดูความสมดุลของทั้งสองค่าในตัวเลขเดียว"],
+["Accuracy","ความถูกต้องรวม: ทายถูกกี่ส่วนจากทั้งหมด = (TP+TN)/ทั้งหมด พิจารณารวมทุกคลาส"],
+["Type I error","ความผิดพลาดแบบ False Positive — เตือนผิด"],["Type II error","ความผิดพลาดแบบ False Negative — พลาดของจริง"],
+["Condition Positive / Negative","P = ของที่ใช่ทั้งหมด = TP+FN · N = ของที่ไม่ใช่ทั้งหมด = FP+TN"],
+["Ground Truth","ค่าจริง/ผลเฉลยของข้อมูล ใช้เทียบกับผลที่โมเดลทำนาย"]],
+dt:[["Decision Tree","โมเดล Classification แบบ Supervised ที่มีโครงสร้างเป็นต้นไม้ ถามเงื่อนไขแอตทริบิวต์ทีละขั้นจนได้คลาสคำตอบ"],
+["Root Node","โหนดบนสุด แอตทริบิวต์แรกที่แบ่งข้อมูลได้ดีที่สุด (Information Gain สูงสุด)"],["Internal Node","โหนดภายใน ใช้ทดสอบเงื่อนไขของแอตทริบิวต์"],
+["Branch","กิ่ง แทนค่า/ผลการทดสอบของแอตทริบิวต์"],["Leaf Node","โหนดปลายสุด บอกคลาสคำตอบ"],
+["Entropy","ค่าวัดความไม่บริสุทธิ์/ความปนกันของคลาสในกลุ่มข้อมูล = 0 เมื่อเป็นคลาสเดียว สูงสุดเมื่อปนกันเท่า ๆ กัน"],
+["Information Gain","ค่าที่ Entropy ลดลงหลังแบ่งข้อมูลด้วยแอตทริบิวต์หนึ่ง เลือกตัวที่สูงสุดมาเป็นโหนด"],
+["ID3","อัลกอริทึมสร้างต้นไม้ที่ใช้ Entropy และ Information Gain"],["Gini Index","ค่าวัดความไม่บริสุทธิ์ ใช้ในอัลกอริทึม CART"],
+["Overfitting","ต้นไม้ซับซ้อนเกินไป จำข้อมูลสอนรวม noise แม่นกับข้อมูลสอนแต่ทำนายข้อมูลใหม่ได้แย่"],
+["Pruning","ตัดแต่งกิ่งที่ไม่จำเป็นออก เพื่อลด Overfitting (Pre-pruning / Post-pruning)"],
+["IF–THEN Rule","ทุกเส้นทางจาก Root ถึง Leaf แปลงเป็นกฎได้ ทำให้อธิบายโมเดลได้ง่าย"]],
+nb:[["Naïve Bayes","เทคนิคจำแนกข้อมูลแบบ Supervised ใช้ความน่าจะเป็นตาม Bayes Theorem ทำนายสิ่งที่ยังไม่เกิดจากสิ่งที่เคยเกิด"],
+["Thomas Bayes","ผู้คิดค้นทฤษฎีของเบย์"],["Bayes Theorem","P(C|A) = P(A|C) × P(C) / P(A)"],
+["Conditional Probability","P(A|B) ความน่าจะเป็นที่ A เกิด เมื่อ B เกิดขึ้นแล้ว = P(A∩B)/P(B)"],
+["Joint Probability","P(A∩B) ความน่าจะเป็นที่ A และ B เกิดร่วมกัน"],
+["Prior Probability","P(C) ความน่าจะเป็นที่ทราบมาก่อน = สัดส่วนของคลาส C"],
+["Likelihood","P(A|C) ความน่าจะเป็นที่ข้อมูลคลาส C จะมีแอตทริบิวต์ A"],
+["Posterior Probability","P(C|A) ความน่าจะเป็นที่ข้อมูลที่มีแอตทริบิวต์ A จะเป็นคลาส C — สิ่งที่ต้องการทำนาย"],
+["Naïve (ไร้เดียงสา)","สมมติว่าแอตทริบิวต์เป็นอิสระต่อกัน จึงคูณความน่าจะเป็นแต่ละตัวได้"],
+["Zero Frequency","ค่าความน่าจะเป็นบางค่าเป็น 0 ทำให้ผลคูณทั้งคลาสเป็น 0"],
+["Set Role","Operator ใน AI Studio ใช้กำหนดคอลัมน์เป้าหมาย (Label)"],["Split Data","แบ่งข้อมูลเป็นชุดสอนโมเดลและชุดทดสอบ"]],
+ar:[["Association Rule","กฎความสัมพันธ์ของข้อมูล หารูปแบบที่เกิดร่วมกันบ่อย เขียนเป็น LHS ⇒ RHS"],
+["Market Basket Analysis","การวิเคราะห์ตะกร้าการซื้อ ศึกษาว่าลูกค้ามักซื้อสินค้าอะไรร่วมกัน"],
+["Transaction Database","ฐานข้อมูลที่ 1 แถว = 1 การซื้อ (ตะกร้า) ใช้ทำ Association Mining"],
+["Item set","กลุ่มสินค้าตั้งแต่ 1 ชนิดขึ้นไป · N ชนิดมีได้ 2ᴺ−1 แบบ"],
+["Frequent itemset","itemset ที่ผ่านเกณฑ์ minimum support"],
+["Support","เปอร์เซ็นต์ของทรานแซคชันที่มี itemset นั้น เทียบกับทั้งหมด (ความนิยม)"],
+["Confidence","Support(LHS,RHS)/Support(LHS) — ถ้าซื้อ LHS แล้วจะซื้อ RHS ด้วยกี่ % (ความน่าเชื่อถือของกฎ)"],
+["Minimum Support / Confidence","เกณฑ์ขั้นต่ำที่ผู้เชี่ยวชาญกำหนด กฎที่ดีต้องผ่านทั้งสองเกณฑ์"],
+["LHS / RHS","LHS = ส่วนซ้าย/ส่วนก่อน (Trigger) · RHS = ส่วนขวา/ส่วนหลัง (สินค้าที่ซื้อตาม)"],
+["Apriori","อัลกอริทึมหากฎ 2 ขั้น: หา frequent itemsets (Join + Count) → สร้าง association rules"],
+["Join / Count","Join สร้าง itemset ยาวขึ้นทีละ 1 · Count นับ support และตัดตัวที่ไม่ผ่าน"],
+["FP-Growth","Operator ใน AI Studio ใช้หา frequent itemsets ก่อน Create Association Rules"]]
+};
+
+/* ---------- question bank (o[0] = correct; shuffled at runtime) ---------- */
+const Q=[
+/* ===== EVALUATION ===== */
+{c:'ev',q:'จุดประสงค์หลักของการประเมินผลและวัดประสิทธิภาพโมเดลคือข้อใด',o:['เพื่อเช็กว่าโมเดลดีพอจะนำไปใช้งานได้หรือยัง โดยพิสูจน์ด้วยตัวเลข','เพื่อทำให้โมเดลทำงานเร็วขึ้น','เพื่อเพิ่มจำนวนข้อมูลสอน','เพื่อเลือกแอตทริบิวต์ที่จะใช้สร้างโมเดล'],e:'สไลด์: ประเมินเพื่อ<b>เช็กว่าโมเดลดีพอที่จะเอาไปใช้งานได้หรือยัง</b> โดยดูความแม่นยำและความถูกต้อง และต้องพิสูจน์ได้ทางวิทยาศาสตร์/คณิตศาสตร์ว่าดีจริง'},
+{c:'ev',q:'Confusion Matrix คืออะไร',o:['ตารางที่เทียบผลที่โมเดลทำนาย กับสิ่งที่เกิดขึ้นจริง','ตารางแสดงความสัมพันธ์ของสินค้าที่ซื้อร่วมกัน','ตารางความน่าจะเป็นของแต่ละแอตทริบิวต์','แผนภาพต้นไม้ที่ใช้ตัดสินใจ'],e:'Confusion Matrix เทียบ <b>"สิ่งที่โมเดลทำนาย" กับ "ความจริง"</b> ว่ามีสัดส่วนเป็นอย่างไร · ตารางความน่าจะเป็นเป็นของ Naïve Bayes · แผนภาพต้นไม้คือ Decision Tree'},
+{c:'ev',q:'Confusion Matrix เป็นเครื่องมือสำคัญในการวัดความสามารถของ Machine Learning ในการแก้ปัญหาประเภทใด',o:['Classification','Association Rule','Clustering','การทำความสะอาดข้อมูล'],e:'สไลด์: เป็นตารางสำคัญในการวัดความสามารถของ ML ในการแก้ปัญหา <b>classification</b> เพราะต้องมีคลาสคำตอบจริงให้เทียบกับคลาสที่ทาย'},
+{c:'ev',q:'ใน Confusion Matrix ตามสไลด์ของอาจารย์ แถว (แนวนอน) และคอลัมน์ (แนวตั้ง) แทนอะไร',o:['แถว = ผลการทำนาย (Predicted) · คอลัมน์ = ค่าจริง (Actual)','แถว = ค่าจริง · คอลัมน์ = ผลการทำนาย','แถว = Precision · คอลัมน์ = Recall','แถว = ข้อมูลสอน · คอลัมน์ = ข้อมูลทดสอบ'],e:'ตารางในสไลด์วาง <b>Predicted เป็นแถว</b> และ <b>Actual เป็นคอลัมน์</b> (ตำราบางเล่มกลับด้าน จึงต้องอ่านหัวตารางทุกครั้ง)'},
+{c:'ev',q:'True Positive (TP) หมายถึงข้อใด',o:['ทายว่าใช่ และใช่จริง (Hit)','ทายว่าใช่ แต่จริง ๆ ไม่ใช่','ทายว่าไม่ใช่ และไม่ใช่จริง','ทายว่าไม่ใช่ แต่จริง ๆ ใช่'],e:'True = ทายถูก · Positive = ทายว่าใช่ → <b>ทายว่าใช่ แล้วใช่จริง</b> เรียกว่า Hit'},
+{c:'ev',q:'True Negative (TN) มีชื่อเรียกอีกอย่างว่าอะไร',o:['Correct Rejection','False Alarm','Miss','Hit'],e:'TN = ทายว่าไม่ใช่ แล้วไม่ใช่จริง = <b>Correct Rejection</b> (ปฏิเสธถูก) · False Alarm = FP · Miss = FN · Hit = TP'},
+{c:'ev',q:'"ทายว่าใช่ แต่จริง ๆ แล้วไม่ใช่" เรียกว่าอะไร',o:['False Positive (False Alarm, Type I error)','False Negative (Miss, Type II error)','True Negative (Correct Rejection)','True Positive (Hit)'],e:'ทาย Positive แล้วผิด = <b>False Positive</b> หรือสัญญาณเตือนหลอก (False Alarm) = <b>Type I error</b>'},
+{c:'ev',q:'False Negative (FN) ตรงกับข้อใด',o:['ทายว่าไม่ใช่ แต่จริง ๆ แล้วใช่ (Miss)','ทายว่าใช่ แต่จริง ๆ แล้วไม่ใช่ (False Alarm)','ทายว่าไม่ใช่ และไม่ใช่จริง','ทายว่าใช่ และใช่จริง'],e:'FN = ทาย <b>Negative</b> แล้ว<b>ผิด</b> → ของจริงเป็น Positive แต่โมเดลพลาดไป เรียกว่า <b>Miss</b>'},
+{c:'ev',q:'Type I error ตรงกับช่องใดใน Confusion Matrix',o:['False Positive','False Negative','True Positive','True Negative'],e:'<b>Type I error = False Positive</b> (เตือนผิด) · Type II error = False Negative (พลาดของจริง)'},
+{c:'ev',q:'Type II error ตรงกับช่องใดใน Confusion Matrix',o:['False Negative','False Positive','True Negative','True Positive'],e:'<b>Type II error = False Negative</b> คือของจริงเป็น Positive แต่โมเดลบอกว่าไม่ใช่ (Miss)'},
+{c:'ev',q:'Condition Positive (P) คือจำนวนของที่ "ใช่" ทั้งหมดในข้อมูล ประกอบด้วยช่องใด',o:['TP + FN','TP + FP','FP + TN','TP + TN'],e:'ของที่เป็น Positive จริง = ส่วนที่ทายถูก (TP) + ส่วนที่ทายพลาดเป็น Negative (FN) → <b>TP + FN</b> · FP + TN คือ Condition Negative'},
+{c:'ev',q:'Condition Negative (N) คือจำนวนของที่ "ไม่ใช่" ทั้งหมดในข้อมูล ประกอบด้วยช่องใด',o:['FP + TN','TP + FN','TP + FP','FN + TN'],e:'ของที่เป็น Negative จริง = ส่วนที่ทายผิดว่าใช่ (FP) + ส่วนที่ทายถูกว่าไม่ใช่ (TN) → <b>FP + TN</b>'},
+{c:'ev',q:'ความหมายของ Precision คือข้อใด',o:['ในบรรดาที่โมเดลทายว่า Positive ทั้งหมด ทายถูกจริงกี่ส่วน','ในบรรดาของที่เป็น Positive จริงทั้งหมด โมเดลจับได้กี่ส่วน','โมเดลทายถูกกี่ส่วนจากข้อมูลทั้งหมด','ค่าเฉลี่ยของ Recall และ Accuracy'],e:'Precision = จำนวนครั้งที่ทายว่า Positive แล้วถูก ÷ จำนวนครั้งที่<b>ทายว่า Positive ทั้งหมด</b> · ข้อ 2 คือ Recall · ข้อ 3 คือ Accuracy'},
+{c:'ev',q:'ความหมายของ Recall คือข้อใด',o:['ในบรรดาของที่เป็น Positive จริงทั้งหมด โมเดลจับได้กี่ส่วน (เก็บหมดแค่ไหน)','ในบรรดาที่โมเดลทายว่า Positive ทั้งหมด ทายถูกจริงกี่ส่วน','โมเดลทายถูกกี่ส่วนจากข้อมูลทั้งหมด','สัดส่วนของ Negative ที่ทายผิด'],e:'Recall = ทายว่า Positive แล้วถูก ÷ <b>จำนวน Positive ทั้งหมดในข้อมูล</b> หมายความว่า "เก็บหมดแค่ไหน"'},
+{c:'ev',q:'Accuracy มีความหมายตามสไลด์ว่าอย่างไร',o:['จำนวนครั้งที่ทายถูก หารด้วยจำนวนครั้งที่ทายทั้งหมด พิจารณารวมทุกคลาส','จำนวนครั้งที่ทายว่า Positive แล้วถูก หารด้วยจำนวนที่ทายว่า Positive','ค่าเฉลี่ยระหว่าง Precision และ Recall','จำนวน Positive ทั้งหมดในข้อมูล'],e:'Accuracy = ทายถูก ÷ ทายทั้งหมด → <b>"ทายแม่นแค่ไหนแบบรวม ๆ"</b> พิจารณารวมทุกคลาส'},
+{c:'ev',q:'F-measure คืออะไร',o:['ค่าเฉลี่ยระหว่าง Precision และ Recall ที่วัดสองค่าพร้อมกัน','ค่าความแม่นยำรวมทุกคลาส','จำนวน False ทั้งหมดในตาราง','อัตราส่วน FP ต่อ FN'],e:'F-measure = <b>ค่าเฉลี่ย (แบบ harmonic) ของ Precision และ Recall</b> = 2PR/(P+R) วัดทั้งสองค่าพร้อมกัน แยกทีละคลาส'},
+{c:'ev',q:'ตามสไลด์ Precision และ Recall พิจารณาจากอะไรเป็นหลัก',o:['Precision ดูจากผลการทำนาย · Recall ดูจากผลเฉลย','Precision ดูจากผลเฉลย · Recall ดูจากผลการทำนาย','ทั้งคู่ดูจากผลการทำนาย','ทั้งคู่ดูจากผลรวมทุกคลาส'],e:'Precision ตัวหารคือ<b>สิ่งที่ทาย</b>ว่าเป็นคลาสนั้น (ผลการทำนาย) · Recall ตัวหารคือ<b>สิ่งที่เป็น</b>คลาสนั้นจริง (ผลเฉลย)'},
+{c:'ev',q:'Precision เกิดจากการนำค่า TP มาเทียบกับค่าใด',o:['FP','FN','TN','P (Condition Positive)'],e:'สไลด์: Precision เกิดจากการนำค่า <b>tp มาเทียบกับ fp</b> → TP/(TP+FP)'},
+{c:'ev',q:'Recall เกิดจากการนำค่า TP มาเทียบกับค่าใด',o:['FN','FP','TN','N (Condition Negative)'],e:'สไลด์: Recall เกิดจากการนำค่า <b>tp มาเทียบกับ fn</b> → TP/(TP+FN)'},
+{c:'ev',q:'ตัววัดใดพิจารณา "รวมทุกคลาส" ไม่ได้แยกทีละคลาส',o:['Accuracy','Precision','Recall','F-measure'],e:'<b>Accuracy</b> ดูรวมทุกคลาส (ทายถูกทั้งหมด ÷ ทั้งหมด) · ส่วน Precision, Recall, F-measure พิจารณาแยกทีละคลาส (สไลด์หน้าแรกเขียนว่า Accuracy แยกทีละคลาส แต่หน้าสูตรเขียนว่ารวมทุกคลาส ให้ยึดหน้าสูตร)'},
+{c:'ev',q:'ตัววัดชุดใดพิจารณาแยกทีละคลาส',o:['Precision, Recall และ F-measure','Accuracy เท่านั้น','Accuracy และ Precision','Accuracy และ F-measure'],e:'Precision, Recall, F-measure เปลี่ยนค่าตามคลาสที่เราพิจารณา → <b>ดูทีละคลาส</b> · Accuracy ดูรวม'},
+{c:'ev',q:'ถ้าโมเดลไม่มี False Positive เลย (FP = 0) ค่าใดจะเป็น 100% แน่นอน',o:['Precision','Recall','Accuracy','ทุกค่า'],e:'Precision = TP/(TP+FP) ถ้า FP = 0 → <b>TP/TP = 100%</b> (ถ้า TP > 0) · แต่ Recall อาจไม่ถึง 100% ถ้ายังมี FN'},
+{c:'ev',q:'ถ้าโมเดลไม่มี False Negative เลย (FN = 0) ค่าใดจะเป็น 100% แน่นอน',o:['Recall','Precision','Accuracy','F-measure'],e:'Recall = TP/(TP+FN) ถ้า FN = 0 → <b>100%</b> แปลว่าจับของจริงได้ครบทุกตัว แต่อาจเตือนผิดเยอะ (Precision ต่ำ) ก็ได้'},
+{c:'ev',q:'ระบบคัดกรองโรคร้ายแรง ต้องการ "ไม่พลาดผู้ป่วยจริงแม้แต่คนเดียว" ควรเน้นตัววัดใด',o:['Recall (ลด FN)','Precision (ลด FP)','Accuracy เพียงอย่างเดียว','จำนวน TN'],e:'การพลาดผู้ป่วยจริงคือ FN (Miss) ตัววัดที่บอกว่า "เก็บของจริงได้หมดแค่ไหน" คือ <b>Recall</b>'},
+{c:'ev',q:'ระบบกรองอีเมล spam ไม่อยากให้อีเมลสำคัญถูกจัดเป็น spam ผิด ๆ ควรเน้นตัววัดใดของคลาส spam',o:['Precision (ลด FP)','Recall (ลด FN)','Accuracy','Condition Negative'],e:'อีเมลปกติที่ถูกทายว่าเป็น spam = <b>FP</b> (เตือนผิด) ต้องการให้ "ทายว่า spam ทีไรต้องถูก" → เน้น <b>Precision</b>'},
+{c:'ev',q:'โมเดลมี Precision สูงมาก แต่ Recall ต่ำ หมายความว่าอย่างไร',o:['ทายว่าใช่ทีไรมักถูก แต่พลาดของจริงไปเป็นจำนวนมาก','จับของจริงได้ครบ แต่เตือนผิดบ่อย','ทายถูกทุกข้อ','ทายผิดทุกข้อ'],e:'Precision สูง = FP น้อย (ทายว่าใช่แล้วแม่น) · Recall ต่ำ = FN เยอะ (<b>พลาดของจริงไปเยอะ</b>) ข้อ 2 คือกรณี Recall สูง Precision ต่ำ'},
+{c:'ev',q:'โมเดลมี Recall สูงมาก แต่ Precision ต่ำ หมายความว่าอย่างไร',o:['จับของจริงได้เกือบหมด แต่ทายว่าใช่ผิดบ่อย (เตือนผิดเยอะ)','ทายว่าใช่น้อยครั้งแต่ถูกเสมอ','พลาดของจริงไปมาก','ทายถูกทุกคลาส'],e:'Recall สูง = FN น้อย (เก็บครบ) · Precision ต่ำ = <b>FP เยอะ</b> คือเตือนผิดบ่อย เช่น ทายว่าทุกอย่างเป็น Positive ไว้ก่อน'},
+{c:'ev',q:'เหตุใดจึงต้องใช้ F-measure แทนการดู Precision หรือ Recall อย่างเดียว',o:['เพราะต้องการตัวเลขเดียวที่สะท้อนทั้งความแม่นและความครบถ้วนอย่างสมดุล','เพราะ F-measure ไม่ต้องใช้ Confusion Matrix','เพราะ F-measure พิจารณารวมทุกคลาส','เพราะ F-measure มีค่าสูงกว่า Accuracy เสมอ'],e:'F-measure รวม <b>Precision และ Recall</b> ไว้ในตัวเลขเดียว ถ้าตัวใดตัวหนึ่งต่ำ F จะต่ำตาม จึงใช้ดูความสมดุล · ยังคำนวณจาก Confusion Matrix และดูทีละคลาส'},
+{c:'ev',q:'ข้อมูลมีอีเมลปกติ 95% และ spam 5% ถ้าโมเดลทายว่า "ปกติ" ทุกฉบับ ข้อใดถูกต้อง',o:['Accuracy สูง แต่ Recall ของ spam เป็น 0 จึงใช้งานจริงไม่ได้','ทั้ง Accuracy และ Recall ของ spam สูง','Precision ของ spam เป็น 100%','โมเดลนี้ดีที่สุดเพราะ Accuracy สูง'],e:'ทายปกติทุกฉบับ ถูก 95% → <b>Accuracy ดูดี</b> แต่จับ spam ไม่ได้เลย (Recall spam = 0) → แสดงว่า<b>ข้อมูลไม่สมดุลทำให้ Accuracy หลอกตาได้</b> ต้องดู Precision/Recall/F ประกอบ'},
+{c:'ev',q:'ในตัวอย่างอีเมล ถ้าเปลี่ยนจากพิจารณาคลาส normal ไปพิจารณาคลาส spam จะเกิดอะไรขึ้นกับช่องในตาราง',o:['TP กับ TN สลับกัน และ FP กับ FN สลับกัน','ทุกช่องมีค่าเท่าเดิม','TP กับ FP สลับกัน','ค่า Accuracy เปลี่ยนไป'],e:'คลาสที่สนใจเปลี่ยน ช่อง "ถูก" สองช่องสลับบทบาทกัน (<b>TP ↔ TN</b>) และช่อง "ผิด" ก็สลับ (<b>FP ↔ FN</b>) · Accuracy เท่าเดิมเพราะดูรวม'},
+{c:'ev',q:'ใน Confusion Matrix แบบหลายคลาส ค่า TP ของแต่ละคลาสอยู่ตำแหน่งใด',o:['ช่องเส้นทแยงมุมของคลาสนั้น','ผลรวมแถวของคลาสนั้น','ผลรวมคอลัมน์ของคลาสนั้น','ช่องที่มีค่ามากที่สุดในตาราง'],e:'TP = ทายเป็นคลาส X และเป็น X จริง → แถวกับคอลัมน์เป็นคลาสเดียวกัน = <b>เส้นทแยงมุม</b>'},
+{c:'ev',q:'ใน Confusion Matrix หลายคลาส (แถว = Predicted) ตัวหารของ Precision ของคลาสหนึ่งคือข้อใด',o:['ผลรวมแถวของคลาสนั้น (จำนวนที่ทายว่าเป็นคลาสนั้น)','ผลรวมคอลัมน์ของคลาสนั้น','ผลรวมเส้นทแยงทั้งหมด','จำนวนข้อมูลทั้งหมด'],e:'Precision ดูจาก<b>ผลการทำนาย</b> → หารด้วย<b>ผลรวมแถว</b> (ที่ทายว่าเป็นคลาสนั้น) · ผลรวมคอลัมน์ใช้กับ Recall'},
+{c:'ev',q:'ใน Confusion Matrix หลายคลาส (คอลัมน์ = Actual) ตัวหารของ Recall ของคลาสหนึ่งคือข้อใด',o:['ผลรวมคอลัมน์ของคลาสนั้น (จำนวนที่เป็นคลาสนั้นจริง)','ผลรวมแถวของคลาสนั้น','ผลรวมเส้นทแยงทั้งหมด','ผลรวมช่องที่ไม่ใช่เส้นทแยง'],e:'Recall ดูจาก<b>ผลเฉลย</b> → หารด้วย<b>ผลรวมคอลัมน์</b> (ของจริงในคลาสนั้น)'},
+{c:'ev',q:'ตัวอย่างหมา–แมว (Positive = Dog) ภาพ "แมว" ที่โมเดลทายว่าเป็น "หมา" จัดอยู่ช่องใด',o:['False Positive','False Negative','True Positive','True Negative'],e:'โมเดลทายว่า Positive (หมา) แต่ความจริงเป็น Negative (แมว) → ทาย Positive แล้วผิด = <b>FP</b>'},
+{c:'ev',q:'ตัวอย่างหมา–แมว (Positive = Dog) ภาพ "หมา" ที่โมเดลทายว่าเป็น "แมว" จัดอยู่ช่องใด',o:['False Negative','False Positive','True Negative','True Positive'],e:'ความจริงเป็นหมา (Positive) แต่ทายว่าแมว (Negative) → ทาย Negative แล้วผิด = <b>FN</b> (Miss)'},
+{c:'ev',q:'ตัวอย่างตรวจจับป้ายจราจร (Positive = ป้าย) ภาพ "พื้นหลัง" ที่ระบบทายว่าเป็น "ป้าย" คือช่องใด',o:['False Positive','False Negative','True Negative','True Positive'],e:'ผลเฉลยคือพื้นหลัง แต่ทายว่าเป็นป้าย = <b>FP</b> (สไลด์: ผลเฉลยคือพื้นหลังแต่ทำนายว่าเป็นป้ายจราจร)'},
+{c:'ev',q:'ตัวอย่างตรวจจับป้ายจราจร ถ้ามองในมุมของ "พื้นหลัง" ค่า Precision(พื้นหลัง) ใช้สูตรใด',o:['TN / (TN + FN)','TN / (TN + FP)','TP / (TP + FP)','TP / (TP + FN)'],e:'มองพื้นหลังเป็นคลาสหลัก ตัวตั้งคือ TN ตัวหารคือ "ที่ทายว่าเป็นพื้นหลัง" = แถวล่าง = <b>TN + FN</b> · TN/(TN+FP) คือ Recall(พื้นหลัง)'},
+{c:'ev',q:'ค่า Precision, Recall, F-measure และ Accuracy มีช่วงค่าและการตีความอย่างไร',o:['อยู่ระหว่าง 0 ถึง 1 (0–100%) ยิ่งสูงยิ่งดี','อยู่ระหว่าง −1 ถึง 1 ยิ่งใกล้ 0 ยิ่งดี','ไม่มีขอบเขต ยิ่งต่ำยิ่งดี','อยู่ระหว่าง 0 ถึง 100 ยิ่งต่ำยิ่งดี'],e:'ทุกตัวเป็นสัดส่วนจาก Confusion Matrix → ค่า <b>0–1 (0–100%)</b> ค่าสูงแปลว่าโมเดลดี'},
+{c:'ev',q:'คำว่า Ground Truth ในตัวอย่าง Confusion Matrix หมายถึงอะไร',o:['ความจริง/ผลเฉลยของข้อมูล','ผลที่โมเดลทำนาย','ข้อมูลที่ใช้สอนโมเดล','ค่า Accuracy'],e:'สไลด์: แนวตั้งคือความจริง <b>Ground Truth</b> แนวนอนคือสิ่งที่โมเดลทำนาย'},
+{c:'ev',q:'ในโปรแกรม AI Studio Operator ใดใช้วัดผลความแม่นยำของโมเดล',o:['Performance','Apply Model','Set Role','Split Data'],e:'<b>Performance</b> ใช้วัดผล (Accuracy, Precision, Recall ฯลฯ) ต่อจาก Apply Model'},
+{c:'ev',q:'ข้อใดกล่าว "ไม่ถูกต้อง" เกี่ยวกับการวัดประสิทธิภาพโมเดล',o:['Accuracy สูงแปลว่าโมเดลดีในทุกกรณี ไม่ต้องดูค่าอื่น','Precision และ Recall อาจขัดกัน ต้องเลือกให้เหมาะกับงาน','F-measure ใช้รวม Precision และ Recall','ตัววัดทั้งหมดคำนวณจาก Confusion Matrix'],e:'Accuracy อาจหลอกตาเมื่อข้อมูลไม่สมดุล จึง<b>ต้องดู Precision, Recall, F-measure ประกอบ</b> ข้ออื่นถูกทั้งหมด'},
+
+/* ===== DECISION TREE ===== */
+{c:'dt',q:'Decision Tree คืออะไร',o:['เทคนิคจำแนกข้อมูลที่สร้างโมเดลเป็นโครงสร้างต้นไม้ ทดสอบเงื่อนไขของแอตทริบิวต์ทีละขั้นจนได้คลาสคำตอบ','เทคนิคหาสินค้าที่ซื้อร่วมกันบ่อย','เทคนิคคำนวณความน่าจะเป็นตาม Bayes Theorem','ตารางเทียบผลทำนายกับค่าจริง'],e:'Decision Tree = โมเดล <b>Classification</b> รูปต้นไม้ ถามเงื่อนไขแอตทริบิวต์ไปเรื่อย ๆ จนถึงใบที่บอกคลาส · ข้ออื่นคือ Association, Naïve Bayes, Confusion Matrix'},
+{c:'dt',q:'Decision Tree จัดเป็นการเรียนรู้ประเภทใด',o:['Supervised Learning (มีผู้สอน)','Unsupervised Learning','Reinforcement Learning','Association Mining'],e:'ต้องใช้ข้อมูลที่<b>มีคลาสคำตอบ</b>ในการสร้างต้นไม้ จึงเป็น <b>Supervised Learning</b> เหมือน Naïve Bayes'},
+{c:'dt',q:'Root Node ของ Decision Tree คืออะไร',o:['โหนดบนสุดของต้นไม้ เป็นแอตทริบิวต์แรกที่แบ่งข้อมูลได้ดีที่สุด','โหนดปลายสุดที่บอกคลาสคำตอบ','เส้นเชื่อมระหว่างโหนด','กลุ่มข้อมูลที่ถูกตัดทิ้ง'],e:'<b>Root Node</b> = โหนดราก อยู่บนสุด เลือกจากแอตทริบิวต์ที่แบ่งข้อมูลได้ดีที่สุด (Information Gain สูงสุด) · โหนดปลายคือ Leaf · เส้นเชื่อมคือ Branch'},
+{c:'dt',q:'Leaf Node (โหนดใบ) ใน Decision Tree ทำหน้าที่อะไร',o:['บอกคลาสคำตอบ/ผลการตัดสินใจ','ทดสอบเงื่อนไขของแอตทริบิวต์','แสดงค่าของแอตทริบิวต์','เก็บค่า Entropy ของทั้งต้นไม้'],e:'Leaf Node = ปลายทางของต้นไม้ <b>บอกคลาส</b> เช่น Play = yes/no · การทดสอบเงื่อนไขเป็นหน้าที่ของ Internal Node'},
+{c:'dt',q:'Branch (กิ่ง) ใน Decision Tree แทนอะไร',o:['ค่าหรือผลของการทดสอบแอตทริบิวต์ที่โหนดนั้น','คลาสคำตอบสุดท้าย','จำนวนข้อมูลทั้งหมด','ค่า Information Gain'],e:'กิ่งแตกออกตาม<b>ค่าของแอตทริบิวต์</b> เช่น โหนด Outlook แตกเป็นกิ่ง sunny / overcast / rainy'},
+{c:'dt',q:'Internal Node (โหนดภายใน) ของ Decision Tree คืออะไร',o:['โหนดที่ใช้ทดสอบเงื่อนไขของแอตทริบิวต์ แล้วแตกกิ่งต่อ','โหนดที่บอกคำตอบสุดท้าย','โหนดที่ถูกตัดทิ้งจาก Pruning','โหนดที่เก็บข้อมูลทดสอบ'],e:'Internal / Decision Node = โหนดระหว่างทาง <b>ทดสอบแอตทริบิวต์</b> แล้วแบ่งข้อมูลลงกิ่งต่าง ๆ'},
+{c:'dt',q:'จุดเด่นสำคัญของ Decision Tree ด้านการอธิบายผลคือข้อใด',o:['แปลงทุกเส้นทางจาก Root ถึง Leaf เป็นกฎ IF–THEN ที่คนอ่านเข้าใจได้','ไม่มีทางเกิด Overfitting','ไม่ต้องใช้ข้อมูลที่มีคลาสคำตอบ','ให้ Accuracy 100% เสมอ'],e:'ต้นไม้อ่านเป็น<b>กฎ IF–THEN</b> ได้ เช่น IF Outlook = sunny AND Humidity = high THEN Play = no → <b>เข้าใจง่าย อธิบายได้</b> · แต่ยังเกิด Overfitting ได้'},
+{c:'dt',q:'Entropy ใน Decision Tree ใช้วัดอะไร',o:['ความไม่บริสุทธิ์ / ความปนกันของคลาสในกลุ่มข้อมูล','ความลึกของต้นไม้','ความแม่นยำของโมเดล','จำนวนแอตทริบิวต์'],e:'Entropy วัด<b>ความยุ่งเหยิง (impurity)</b> ว่าข้อมูลในโหนดปนกันหลายคลาสแค่ไหน'},
+{c:'dt',q:'ถ้าข้อมูลในโหนดหนึ่งเป็นคลาสเดียวกันทั้งหมด ค่า Entropy จะเป็นเท่าใด',o:['0 (บริสุทธิ์ที่สุด)','1 (สูงสุด)','0.5','ไม่สามารถคำนวณได้'],e:'ไม่ปนกันเลย = ไม่มีความไม่แน่นอน → <b>Entropy = 0</b> และโหนดนั้นกลายเป็น Leaf ได้'},
+{c:'dt',q:'กรณีมี 2 คลาส Entropy จะมีค่าสูงสุดเมื่อใด',o:['เมื่อแต่ละคลาสมีจำนวนเท่ากัน (50:50)','เมื่อทุกตัวเป็นคลาสเดียวกัน','เมื่อมีข้อมูลน้อยที่สุด','เมื่อต้นไม้ลึกที่สุด'],e:'ปนกันครึ่งต่อครึ่ง = ไม่แน่นอนที่สุด → <b>Entropy สูงสุด = 1</b>'},
+{c:'dt',q:'Information Gain หมายถึงอะไร',o:['ปริมาณที่ Entropy ลดลงหลังแบ่งข้อมูลด้วยแอตทริบิวต์นั้น','จำนวนกิ่งของต้นไม้','ค่าความน่าจะเป็นของคลาส','สัดส่วนข้อมูลที่ทายถูก'],e:'Information Gain = Entropy ก่อนแบ่ง − Entropy หลังแบ่ง → <b>แบ่งแล้วข้อมูลเป็นระเบียบขึ้นเท่าไร</b>'},
+{c:'dt',q:'ในการสร้าง Decision Tree ด้วย ID3 แอตทริบิวต์ใดจะถูกเลือกเป็นโหนดก่อน',o:['แอตทริบิวต์ที่มี Information Gain สูงที่สุด','แอตทริบิวต์ที่มี Entropy สูงที่สุดหลังแบ่ง','แอตทริบิวต์ที่อยู่คอลัมน์แรกของตาราง','แอตทริบิวต์ที่มีค่าเป็นตัวเลข'],e:'เลือกตัวที่<b>แบ่งได้ดีที่สุด = Information Gain สูงสุด</b> (Entropy หลังแบ่งต่ำสุด)'},
+{c:'dt',q:'อัลกอริทึม ID3 ใช้เกณฑ์ใดในการเลือกแอตทริบิวต์',o:['Entropy และ Information Gain','Gini Index','Support และ Confidence','Prior และ Likelihood'],e:'<b>ID3</b> ใช้ Entropy + Information Gain · Gini Index ใช้ใน CART · Support/Confidence ใช้ใน Apriori · Prior/Likelihood ใช้ใน Naïve Bayes'},
+{c:'dt',q:'Gini Index เป็นค่าวัดความไม่บริสุทธิ์ที่ใช้ในอัลกอริทึมใด',o:['CART','ID3','Apriori','Naïve Bayes'],e:'<b>CART</b> (Classification And Regression Tree) ใช้ Gini Index · ID3 ใช้ Information Gain · C4.5 ใช้ Gain Ratio'},
+{c:'dt',q:'การสร้าง Decision Tree จะหยุดแตกกิ่งที่โหนดหนึ่งเมื่อใด',o:['เมื่อข้อมูลในโหนดเป็นคลาสเดียวกันหมด หรือไม่มีแอตทริบิวต์ให้แบ่งต่อ','เมื่อ Entropy มีค่าเท่ากับ 1','เมื่อได้ Root Node แล้ว','เมื่อ Accuracy ต่ำกว่า 50%'],e:'หยุดเมื่อ<b>โหนดบริสุทธิ์</b> (คลาสเดียว) หรือ<b>ไม่มีแอตทริบิวต์/ข้อมูลเหลือ</b> แล้วสร้างเป็น Leaf · Entropy = 1 คือยังปนกันมาก ต้องแบ่งต่อ'},
+{c:'dt',q:'Overfitting ใน Decision Tree หมายถึงอะไร',o:['ต้นไม้ซับซ้อนเกินไปจนแม่นกับข้อมูลสอน แต่ทำนายข้อมูลใหม่ได้ไม่ดี','ต้นไม้เล็กเกินไปจนทำนายอะไรไม่ได้','ข้อมูลมีจำนวนมากเกินไป','โมเดลมี Recall สูงเกินไป'],e:'Overfitting = ต้นไม้ลึก/ซับซ้อนเกิน <b>จำแม้กระทั่ง noise</b> ของข้อมูลสอน → ใช้กับข้อมูลใหม่ได้แย่'},
+{c:'dt',q:'Pruning (การตัดแต่งกิ่ง) มีจุดประสงค์เพื่ออะไร',o:['ตัดกิ่งที่ไม่จำเป็นออกเพื่อลด Overfitting','เพิ่มความลึกของต้นไม้','เพิ่มจำนวนแอตทริบิวต์','คำนวณค่า Entropy'],e:'Pruning = <b>ตัดกิ่งที่ไม่สำคัญ</b> ทำให้ต้นไม้เล็กลง ทั่วไปขึ้น และทำนายข้อมูลใหม่ได้ดีขึ้น (Pre-pruning / Post-pruning)'},
+{c:'dt',q:'ข้อใดเป็นข้อเสียของ Decision Tree',o:['เกิด Overfitting ได้ง่าย และไม่เสถียรเมื่อข้อมูลเปลี่ยนเล็กน้อย','อธิบายผลให้คนเข้าใจได้ยาก','ต้องสมมติว่าแอตทริบิวต์อิสระต่อกัน','ใช้ได้เฉพาะข้อมูลตัวเลข'],e:'ข้อเสียหลักคือ <b>Overfitting</b> และ<b>ไม่เสถียร</b> · การอธิบายเป็นจุดแข็งของต้นไม้ · การสมมติอิสระต่อกันเป็นของ Naïve Bayes'},
+{c:'dt',q:'แนวทางการสร้าง Decision Tree เป็นแบบใด',o:['Top-down แบ่งข้อมูลเป็นกลุ่มย่อยซ้ำ ๆ (Divide and Conquer)','Bottom-up รวมข้อมูลจากใบขึ้นไปราก','สุ่มเลือกแอตทริบิวต์ทุกโหนด','นับความถี่ของ itemset'],e:'สร้างจาก<b>บนลงล่าง</b> เลือกแอตทริบิวต์ที่ดีที่สุดแล้วแบ่งข้อมูลลงกิ่ง ทำซ้ำกับทุกกิ่ง = <b>Divide and Conquer</b>'},
+{c:'dt',q:'จากข้อมูลเล่นกอล์ฟ 14 วัน (ข้อมูลเดียวกับบท Naïve Bayes) เมื่อสร้างต้นไม้ด้วย Information Gain แอตทริบิวต์ใดเป็น Root',o:['Outlook','Temperature','Humidity','Windy'],e:'Outlook ให้ Information Gain สูงสุด (overcast เป็น yes ทั้งหมด แบ่งได้บริสุทธิ์) → <b>Outlook เป็น Root</b> ตามตัวอย่างคลาสสิก'},
+{c:'dt',q:'กฎ IF Outlook = sunny AND Humidity = high THEN Play = no ได้มาจากส่วนใดของต้นไม้',o:['เส้นทางหนึ่งจาก Root ไปถึง Leaf','Root Node เพียงโหนดเดียว','ค่า Entropy ของต้นไม้','จำนวน Leaf ทั้งหมด'],e:'แต่ละ<b>เส้นทาง Root → Leaf</b> อ่านเป็นกฎ 1 ข้อ: เงื่อนไขในโหนดตลอดทางคือส่วน IF และ Leaf คือส่วน THEN'},
+{c:'dt',q:'หลังสร้าง Decision Tree แล้ว ควรวัดประสิทธิภาพด้วยวิธีใด',o:['ใช้ Confusion Matrix หา Precision, Recall, F-measure, Accuracy','ใช้ค่า Support และ Confidence','ใช้ค่า Prior Probability','ไม่ต้องวัดผลเพราะต้นไม้อธิบายได้'],e:'Decision Tree เป็นโมเดล Classification จึงวัดผลด้วย <b>Confusion Matrix</b> และตัววัดในบทประเมินผล · Support/Confidence เป็นของ Association Rule'},
+
+/* ===== NAIVE BAYES ===== */
+{c:'nb',q:'ทฤษฎีของ Naïve Bayes ถูกคิดค้นโดยใคร',o:['Thomas Bayes','Ross Quinlan','Rakesh Agrawal','Alan Turing'],e:'สไลด์: ถูกคิดค้นขึ้นโดย <b>Thomas Bayes</b> (ที่มาของชื่อ Bayes Theorem) · Ross Quinlan คือผู้คิด ID3 · Agrawal คือผู้คิด Apriori'},
+{c:'nb',q:'Naïve Bayes เป็นกระบวนการเรียนรู้แบบใด',o:['การเรียนรู้แบบมีผู้สอน (Supervised Learning) อาศัยหลักการทางสถิติ','การเรียนรู้แบบไม่มีผู้สอน','การหากฎความสัมพันธ์','การจัดกลุ่มข้อมูล'],e:'สไลด์: Naïve Bayes เป็น<b>กระบวนการเรียนรู้แบบมีผู้สอน</b> โดยอาศัยหลักการทางสถิติ เพื่อคำนวณความน่าจะเป็นของคำตอบ'},
+{c:'nb',q:'Naïve Bayes ใช้หลักการใดเป็นพื้นฐานในการจำแนกข้อมูล',o:['ความน่าจะเป็นตามทฤษฎีของเบย์ (Bayes Theorem)','การแบ่งข้อมูลด้วย Information Gain','การนับความถี่ของ itemset','การวัดระยะห่างระหว่างข้อมูล'],e:'อิง<b>หลักความน่าจะเป็นตาม Bayes Theorem</b> · Information Gain เป็นของ Decision Tree · itemset เป็นของ Association'},
+{c:'nb',q:'แนวคิดของ Naïve Bayesian Classification ตามสไลด์คือข้อใด',o:['วิเคราะห์ความน่าจะเป็นของสิ่งที่ยังไม่เกิด โดยคาดเดาจากสิ่งที่เคยเกิดขึ้นมาก่อน','จัดกลุ่มข้อมูลที่คล้ายกันไว้ด้วยกัน','หาสินค้าที่ลูกค้าซื้อร่วมกัน','แปลงข้อมูลตัวเลขเป็นข้อมูลกลุ่ม'],e:'สไลด์: ใช้วิเคราะห์หาความน่าจะเป็นของ<b>สิ่งที่ยังไม่เคยเกิดขึ้น โดยการคาดเดาจากสิ่งที่เคยเกิดขึ้นมาก่อน</b> ("เปลี่ยนอดีตให้เป็นการพยากรณ์อนาคต")'},
+{c:'nb',q:'P(A|B) หรือ Conditional Probability หมายถึงอะไร',o:['ความน่าจะเป็นที่เหตุการณ์ B เกิดขึ้นก่อน แล้วเหตุการณ์ A ตามมา','ความน่าจะเป็นที่ A และ B เกิดขึ้นร่วมกัน','ความน่าจะเป็นที่ A ไม่เกิด','ความน่าจะเป็นที่ B เกิดขึ้นเพียงอย่างเดียว'],e:'P(A|B) = <b>B เกิดก่อน แล้ว A ตามมา</b> (อ่านว่า A เมื่อรู้ว่า B) · ข้อ 2 คือ Joint Probability P(A∩B)'},
+{c:'nb',q:'P(A ∩ B) หรือ Joint Probability หมายถึงอะไร',o:['ความน่าจะเป็นที่เหตุการณ์ A และ B เกิดขึ้นร่วมกัน','ความน่าจะเป็นที่ A เกิดหลัง B','ความน่าจะเป็นของคลาส','ความน่าจะเป็นที่ A หรือ B เกิด'],e:'Joint Probability = A <b>และ</b> B เกิด<b>ร่วมกัน</b>'},
+{c:'nb',q:'ในสูตร P(C|A) = P(A|C) × P(C) / P(A) ข้อใดคือ Prior Probability',o:['P(C) ความน่าจะเป็นของคลาส C ที่ทราบมาก่อน','P(C|A)','P(A|C)','P(A)'],e:'Prior = "ความน่าจะเป็นที่ทราบมาก่อน" = <b>P(C)</b> สัดส่วนของคลาสในข้อมูล'},
+{c:'nb',q:'Likelihood หรือ P(A|C) หมายถึงอะไร',o:['ความน่าจะเป็นที่ข้อมูลเทรนนิงที่มีคลาส C จะมีแอตทริบิวต์ A','ความน่าจะเป็นที่ข้อมูลที่มีแอตทริบิวต์ A จะเป็นคลาส C','ความน่าจะเป็นของคลาส C','ความน่าจะเป็นของแอตทริบิวต์ A ในข้อมูลทั้งหมด'],e:'<b>Likelihood (ความเป็นไปได้)</b> = รู้คลาสแล้ว ถามว่ามีแอตทริบิวต์ A เท่าไร · ข้อ 2 คือ Posterior (กลับด้านกัน ระวังสับสน!)'},
+{c:'nb',q:'Posterior Probability หรือ P(C|A) หมายถึงอะไร',o:['ความน่าจะเป็นที่ข้อมูลที่มีแอตทริบิวต์ A จะมีคลาส C','ความน่าจะเป็นที่คลาส C จะมีแอตทริบิวต์ A','ความน่าจะเป็นของคลาส C ในข้อมูลทั้งหมด','ความน่าจะเป็นที่ A และ C เกิดร่วมกัน'],e:'Posterior = "ความน่าจะเป็นที่ตามมา" = รู้แอตทริบิวต์แล้ว ทายว่าจะเป็นคลาสไหน → <b>คือสิ่งที่ต้องการทำนาย</b>'},
+{c:'nb',q:'ในสูตร Naïve Bayes ค่าใดคือสิ่งที่เราต้องการคำนวณเพื่อทำนายคลาสของข้อมูลใหม่',o:['Posterior Probability P(C|A)','Prior Probability P(C)','Likelihood P(A|C)','P(A)'],e:'เราต้องการรู้ว่า "ข้อมูลที่มีแอตทริบิวต์แบบนี้ น่าจะเป็นคลาสไหน" = <b>P(C|A)</b> แล้วเลือกคลาสที่ค่ามากที่สุด'},
+{c:'nb',q:'เหตุใดอัลกอริทึมนี้จึงเรียกว่า "Naïve" (ไร้เดียงสา)',o:['เพราะสมมติว่าแต่ละแอตทริบิวต์เป็นอิสระต่อกัน','เพราะใช้ข้อมูลสอนน้อย','เพราะไม่ต้องมีคลาสคำตอบ','เพราะให้ความแม่นยำต่ำเสมอ'],e:'สมมติแบบ "ไร้เดียงสา" ว่าแอตทริบิวต์<b>ไม่ขึ้นต่อกัน</b> จึงคูณ P(a₁|C) × P(a₂|C) × … ได้ตรง ๆ แม้ในความจริงอาจสัมพันธ์กัน'},
+{c:'nb',q:'Naïve Bayes ตัดสินคลาสคำตอบของข้อมูลใหม่อย่างไร',o:['เลือกคลาสที่มีค่าความน่าจะเป็น (Posterior) สูงที่สุด','เลือกคลาสที่มีจำนวนข้อมูลน้อยที่สุด','เลือกคลาสแบบสุ่ม','เลือกคลาสที่มี Entropy ต่ำที่สุด'],e:'คำนวณค่าของทุกคลาส แล้ว<b>คลาสที่ค่ามากที่สุดชนะ</b> (ตัวอย่างสไลด์: no 0.0276 > yes 0.0068 → ทาย no)'},
+{c:'nb',q:'เวลาเปรียบเทียบคลาส ทำไมจึงไม่ต้องหารด้วย P(A)',o:['เพราะ P(A) มีค่าเท่ากันทุกคลาส จึงไม่ทำให้ผลการเปรียบเทียบเปลี่ยน','เพราะ P(A) มีค่าเป็น 1 เสมอ','เพราะ P(A) มีค่าเป็น 0','เพราะสูตรไม่มี P(A)'],e:'ทุกคลาสหารด้วย P(A) ตัวเดียวกัน → <b>ตัดทิ้งได้</b> คลาสที่ตัวเศษมากกว่าก็ยังชนะเหมือนเดิม'},
+{c:'nb',q:'ในตัวอย่างเล่นกอล์ฟ ไม่มีวัน overcast ไหนที่ไม่เล่นเลย ส่งผลอย่างไรต่อการทำนายวันที่เป็น overcast',o:['ผลคูณของคลาส no เป็น 0 เสมอ จึงทายว่า yes','ผลคูณของคลาส yes เป็น 0 เสมอ','ทำนายไม่ได้','ไม่มีผลใด ๆ'],e:'P(overcast | no) = 0 → คูณกับอะไรก็<b>เป็น 0</b> คลาส no แพ้แน่นอน เรียกว่าปัญหา <b>zero frequency</b>'},
+{c:'nb',q:'ในตัวอย่างเล่นกอล์ฟ แอตทริบิวต์ใดเป็น Target (คลาสคำตอบ)',o:['Play','Outlook','Humidity','Windy'],e:'Outlook, Temp, Humidity, Windy เป็น Features (ตัวแปรอิสระ) · <b>Play</b> (yes/no) คือ Target Output ที่ต้องการทำนาย'},
+{c:'nb',q:'ข้อใดเป็นตัวอย่างการประยุกต์ใช้ Naïve Bayes ตามสไลด์',o:['Email Spam Detection และ Sentiment Analysis','การจัดวางสินค้าบนชั้น','การหาความถี่ของ itemset','การตัดแต่งกิ่งต้นไม้'],e:'สไลด์ยก 7 ตัวอย่าง: Face Recognition, <b>Email Spam Detection</b>, Categorizing News, <b>Sentiment Analysis</b>, Weather Prediction, Medical Diagnosis, Digit Recognition'},
+{c:'nb',q:'ข้อใด "ไม่ใช่" ตัวอย่างการประยุกต์ใช้ Naïve Bayes ที่สไลด์ยกมา',o:['Market Basket Analysis','Face Recognition','Medical Diagnosis','Digit Recognition'],e:'<b>Market Basket Analysis</b> เป็นงานของ Association Rule · อีก 3 ข้ออยู่ในรายการการประยุกต์ใช้ Naïve Bayes'},
+{c:'nb',q:'จุดเด่นของ Naïve Bayes ตามสไลด์คือข้อใด',o:['เป็นอัลกอริทึมที่ไม่ซับซ้อน สร้างโมเดลง่าย','ไม่ต้องใช้ข้อมูลในอดีต','ไม่มีการคำนวณความน่าจะเป็น','แสดงผลเป็นแผนภาพต้นไม้'],e:'สไลด์: Naïve Bayes เป็น<b>อัลกอริทึมที่ไม่ซับซ้อน</b> และได้รับความนิยมเพราะ<b>สร้างโมเดลง่าย</b>'},
+{c:'nb',q:'ใน AI Studio Operator "Set Role" ทำหน้าที่อะไร',o:['กำหนดว่าคอลัมน์ Play คือเป้าหมายที่ต้องการพยากรณ์ (Target Label)','แบ่งข้อมูลสำหรับสอนและทดสอบ','สร้างตารางความน่าจะเป็น','วัดผลความแม่นยำ'],e:'Set Role = บอกโปรแกรมว่าคอลัมน์ไหนเป็น <b>label</b> · แบ่งข้อมูลคือ Split Data · สร้างตารางคือ Naïve Bayes · วัดผลคือ Performance'},
+{c:'nb',q:'ใน AI Studio Operator "Split Data" มีหน้าที่อะไร',o:['แบ่งข้อมูลสำหรับสอนโมเดล และสำหรับทดสอบความแม่นยำ','นำเข้าข้อมูล','นำโมเดลไปทำนายข้อมูลใหม่','กำหนดคอลัมน์เป้าหมาย'],e:'Split Data = <b>แบ่งข้อมูล train / test</b> เพื่อให้วัดผลกับข้อมูลที่โมเดลไม่เคยเห็น'},
+{c:'nb',q:'ลำดับ Operator ใน AI Studio สำหรับ Naïve Bayes ข้อใดถูกต้อง',o:['Retrieve → Set Role → Split Data → Naïve Bayes → Apply Model → Performance','Retrieve → Naïve Bayes → Set Role → Performance → Apply Model','Set Role → Retrieve → Apply Model → Naïve Bayes → Split Data','Retrieve → Split Data → Performance → Naïve Bayes → Apply Model'],e:'นำเข้า → กำหนด label → แบ่งข้อมูล → สร้างโมเดล → นำไปทำนาย → <b>วัดผลเป็นขั้นสุดท้าย</b>'},
+{c:'nb',q:'Operator "Apply Model" ใน AI Studio ทำหน้าที่อะไร',o:['นำโมเดลที่สร้างแล้วไปพยากรณ์ข้อมูลชุดใหม่','สร้างตารางความน่าจะเป็น','วัดผลความแม่นยำ','กำหนดบทบาทของคอลัมน์'],e:'Apply Model = <b>เอาโมเดลไปใช้ทำนาย</b>ข้อมูลชุดทดสอบ/ข้อมูลใหม่ แล้วส่งผลต่อให้ Performance'},
+{c:'nb',q:'สัญลักษณ์ A และ C ในสูตร Bayes ที่ใช้จำแนกข้อมูล แทนอะไร',o:['A = แอตทริบิวต์ (attribute) · C = ค่าคลาส (class)','A = Accuracy · C = Confidence','A = Actual · C = Confusion','A = Apriori · C = Count'],e:'สไลด์: เปลี่ยนสัญลักษณ์ให้เป็น A และ C โดยที่ <b>A คือแอตทริบิวต์</b> และ <b>C คือค่าคลาส</b>'},
+
+/* ===== ASSOCIATION ===== */
+{c:'ar',q:'Association Rule นิยมใช้ในธุรกิจใด และเรียกการวิเคราะห์นี้ว่าอะไร',o:['ธุรกิจค้าปลีก · Market Basket Analysis','ธุรกิจธนาคาร · Credit Scoring','โรงพยาบาล · Medical Diagnosis','ธุรกิจข่าว · News Categorizing'],e:'สไลด์: มักใช้ในธุรกิจการค้าปลีก (retailing) เช่น ร้านสะดวกซื้อ ซูเปอร์มาร์เก็ต เป็น<b>การวิเคราะห์ตะกร้าตลาด (Market Basket Analysis)</b>'},
+{c:'ar',q:'จุดประสงค์ของการทำเหมืองข้อมูลสัมพันธ์คือข้อใด',o:['ค้นหากฎและวิเคราะห์ความสัมพันธ์ระหว่างไอเท็มในเซตของสินค้า','ทำนายคลาสของข้อมูลใหม่','วัดประสิทธิภาพของโมเดล','สร้างต้นไม้ตัดสินใจ'],e:'สไลด์: จุดประสงค์เพื่อ<b>ค้นหากฎและวิเคราะห์ความสัมพันธ์ระหว่างไอเท็ม</b>ซึ่งอยู่ในเซตของสินค้า'},
+{c:'ar',q:'ฐานข้อมูลที่ใช้ในการทำเหมืองความสัมพันธ์มักเป็นประเภทใด',o:['Transaction Database','Image Database','Graph Database','Time-series Database'],e:'ข้อมูลตะกร้า 1 แถว = 1 การซื้อ เรียก <b>Transaction Database</b>'},
+{c:'ar',q:'ข้อมูลที่นำมาใช้ทำ Association Rule ต้องอยู่ในรูปแบบใด',o:['Nominal หรือ Ordinal เท่านั้น','Interval หรือ Ratio เท่านั้น','ตัวเลขทศนิยมต่อเนื่อง','รูปภาพและเสียง'],e:'สไลด์: ข้อมูลที่นำมาใช้จะอยู่ในรูปแบบ <b>Nominal หรือ Ordinal เท่านั้น</b> (ใน Lab จึงต้องใช้ Numerical to Binominal)'},
+{c:'ar',q:'ข้อใดคือตัวอย่างคลาสสิกของ Market Basket Analysis ที่สไลด์ยกมา',o:['ลูกค้าที่ซื้อผ้าอ้อมส่วนใหญ่จะซื้อเบียร์ด้วย','ลูกค้าที่อายุมากจะซื้อสินค้าราคาแพง','วันที่ฝนตกลูกค้าจะไม่มาเล่นกอล์ฟ','อีเมลที่มีคำว่าฟรีมักเป็น spam'],e:'ตัวอย่างดัง: <b>ผ้าอ้อม ⇒ เบียร์</b> · ข้อกอล์ฟและ spam เป็นตัวอย่างของ Naïve Bayes'},
+{c:'ar',q:'Item set หมายถึงอะไร',o:['กลุ่มของสินค้าตั้งแต่ 1 ชนิดขึ้นไป เขียนแทนด้วยสัญลักษณ์เซต','กฎความสัมพันธ์ระหว่างสินค้า 2 กลุ่ม','จำนวนทรานแซคชันทั้งหมด','ค่าความเชื่อมั่นของกฎ'],e:'Item set = <b>กลุ่มของสินค้าตั้งแต่ 1 ชนิดขึ้นไป</b> เช่น {โยเกิร์ต} {นม, ผัก} · ข้อ 2 คือ Association rule'},
+{c:'ar',q:'ถ้ามีสินค้า N ชนิด จะเขียน itemset ที่แตกต่างกันได้กี่รูปแบบ',o:['2ᴺ − 1','2ᴺ','N²','N!'],e:'สูตร <b>2ᴺ − 1</b> (ลบ 1 เพราะไม่นับเซตว่าง) จำนวนโตแบบทวีคูณ ร้านจริงจึงคำนวณทุกแบบด้วยมือไม่ได้'},
+{c:'ar',q:'การหากฎความสัมพันธ์ด้วยวิธี Apriori มี 2 ขั้นตอนใหญ่คือข้อใด',o:['หา frequent itemsets แล้วสร้าง association rule','Join แล้ว Count','แบ่งข้อมูล train/test แล้ววัด Accuracy','คำนวณ Prior แล้วคำนวณ Likelihood'],e:'2 ขั้นใหญ่: (1) <b>หา frequent itemsets</b> (2) <b>สร้าง association rule</b> · Join และ Count เป็นขั้นย่อยของขั้นที่ 1'},
+{c:'ar',q:'ขั้นตอนย่อย "Join" ในการหา frequent itemsets คืออะไร',o:['นำ itemset ที่ผ่าน minimum support มาสร้าง itemset ที่ยาวขึ้นทีละหนึ่ง','นับค่า support ของ itemset','สร้างกฎ LHS ⇒ RHS','รวมทุกตะกร้าให้เป็นตารางเดียว'],e:'Join = สร้าง itemset <b>ที่ยาวขึ้นทีละ 1</b> จาก itemset ที่ผ่านเกณฑ์ · การนับ support คือ Count'},
+{c:'ar',q:'ขั้นตอนย่อย "Count" ในการหา frequent itemsets คืออะไร',o:['คำนวณค่า support ของ itemset ที่สร้างขึ้น แล้วตัดตัวที่ไม่ผ่านเกณฑ์','สร้าง itemset ที่ยาวขึ้น','คำนวณค่า Confidence','นับจำนวนชนิดสินค้า'],e:'Count = <b>นับค่า support</b> (เปอร์เซ็นต์ที่พบ itemset ในฐานข้อมูล) แล้วคัดตัวที่ต่ำกว่า minimum support ออก'},
+{c:'ar',q:'Support (ค่าสนับสนุน) คืออะไร',o:['เปอร์เซ็นต์ของจำนวนทรานแซคชันที่มี itemset นั้น เทียบกับทรานแซคชันทั้งหมด','เปอร์เซ็นต์ที่ซื้อ RHS เมื่อซื้อ LHS แล้ว','จำนวนชนิดสินค้าในตะกร้า','จำนวนกฎที่ผ่านเกณฑ์'],e:'Support = จำนวนทรานแซคชันที่ปรากฏ ÷ ทั้งหมด → วัด<b>ความนิยมภาพรวม</b> · ข้อ 2 คือ Confidence'},
+{c:'ar',q:'Confidence (ค่าความเชื่อมั่น) คืออะไร',o:['เปอร์เซ็นต์ที่ itemset ทั้งกฎเกิดขึ้น ต่อจำนวนที่ฝั่ง LHS เกิดขึ้น','เปอร์เซ็นต์ของ itemset เทียบกับทรานแซคชันทั้งหมด','จำนวนสินค้าฝั่ง RHS','ค่าความนิยมของสินค้าชิ้นเดียว'],e:'Confidence(LHS⇒RHS) = Support(LHS, RHS) ÷ Support(LHS) = <b>ถ้ามี LHS แล้วจะมี RHS ด้วยกี่ %</b>'},
+{c:'ar',q:'ข้อใดเปรียบเทียบ Support กับ Confidence ได้ถูกต้อง',o:['Support เทียบกับทรานแซคชันทั้งหมด ส่วน Confidence เทียบกับเฉพาะตะกร้าที่มี LHS','Support เทียบกับเฉพาะตะกร้าที่มี LHS ส่วน Confidence เทียบกับทั้งหมด','ทั้งสองค่าเทียบกับทรานแซคชันทั้งหมด','ทั้งสองค่าไม่เกี่ยวกับจำนวนทรานแซคชัน'],e:'Support = ความนิยม (Popularity) เทียบ<b>ทั้งร้าน</b> · Confidence = ความน่าเชื่อถือของกฎ เทียบเฉพาะ<b>ตะกร้าที่มี LHS</b>'},
+{c:'ar',q:'Support ตอบคำถามแบบใด',o:['สินค้านี้ถูกซื้อบ่อยแค่ไหน เมื่อเทียบกับตะกร้าทั้งหมด','ถ้าลูกค้าซื้อ A แล้ว โอกาสจะซื้อ B ตามมามีแค่ไหน','ลูกค้าคนนี้จะซื้อสินค้าหรือไม่','สินค้าใดมีราคาแพงที่สุด'],e:'Support ตอบ "<b>ถูกซื้อบ่อยแค่ไหนเทียบกับตะกร้าทั้งหมด</b>" · ข้อ 2 คือคำถามของ Confidence'},
+{c:'ar',q:'ในกฎ "ลูกค้าซื้อโยเกิร์ต ⇒ ลูกค้าซื้อนม" ส่วน "ลูกค้าซื้อโยเกิร์ต" เรียกว่าอะไร',o:['LHS (Left Hand Side) ส่วนซ้าย/ส่วนก่อน','RHS (Right Hand Side) ส่วนขวา/ส่วนหลัง','Support','Frequent pattern'],e:'ส่วนซ้ายหรือส่วนก่อน (Trigger) = <b>LHS</b> · ส่วนขวาหรือส่วนหลัง (นม) = RHS'},
+{c:'ar',q:'RHS ในกฎความสัมพันธ์หมายถึงอะไร',o:['ส่วนขวา/ส่วนหลัง คือกลุ่มสินค้าที่ลูกค้าจะซื้อตามมา','ส่วนซ้าย คือสินค้าที่ซื้อก่อน','จำนวนทรานแซคชันทั้งหมด','ค่า minimum support'],e:'<b>RHS (Right Hand Side)</b> = ส่วนหลัง ผลลัพธ์ที่ซื้อตาม (Cross-sell result) เช่น {เนย} ในกฎ {ขนมปัง} ⇒ {เนย}'},
+{c:'ar',q:'กฎ Apple ⇒ Cereal หมายความว่าอย่างไร',o:['เมื่อลูกค้าซื้อ Apple แล้วลูกค้าจะซื้อ Cereal ร่วมไปด้วย','เมื่อลูกค้าซื้อ Cereal แล้วจะซื้อ Apple ร่วมไปด้วย','Apple ขายดีกว่า Cereal','ลูกค้าซื้อ Apple หรือ Cereal อย่างใดอย่างหนึ่ง'],e:'อ่านจากซ้ายไปขวา LHS = Apple → RHS = Cereal = <b>ซื้อ Apple แล้วจะซื้อ Cereal ด้วย</b>'},
+{c:'ar',q:'ใครเป็นผู้กำหนดค่า Minimum Support และ Minimum Confidence',o:['ผู้ใช้ระบบหรือผู้เชี่ยวชาญ (Expert user) ตามโจทย์ปัญหาและประสบการณ์','อัลกอริทึม Apriori คำนวณให้อัตโนมัติ','กำหนดตายตัวที่ 50% เสมอ','ลูกค้าที่มาซื้อสินค้า'],e:'สไลด์: ขึ้นอยู่กับ<b>ผู้ใช้ระบบหรือผู้เชี่ยวชาญ (Expert user)</b> ในการกำหนดเพื่อให้ได้ผลลัพธ์ตามที่ต้องการ'},
+{c:'ar',q:'Item sets ที่ผ่านการคัดกรองด้วย minimum support แล้ว เรียกว่าอะไร',o:['Frequent itemsets','Candidate rules','Leaf nodes','Transactions'],e:'สไลด์: Item sets ที่ผ่านการคัดกรอง จะถูกเรียกว่า <b>frequent itemsets</b>'},
+{c:'ar',q:'ค่า Confidence ของกฎเท่ากับ 1 (100%) หมายความว่าอย่างไร',o:['ซื้อสินค้าฝั่ง LHS แล้ว ต้องซื้อสินค้าฝั่ง RHS ด้วยเสมอ','ลูกค้าทุกคนในร้านซื้อสินค้านั้น','สินค้านั้นปรากฏในทุกทรานแซคชัน','กฎนั้นผ่าน minimum support แน่นอน'],e:'สไลด์: ถ้าเท่ากับ 1 คือ <b>ซื้ออย่างแรก ต้องซื้ออย่างหลังเสมอ</b> · "ปรากฏทุกทรานแซคชัน" คือ Support 100% ซึ่งเป็นคนละเรื่อง'},
+{c:'ar',q:'Confidence(A ⇒ B) กับ Confidence(B ⇒ A) มีค่าเท่ากันหรือไม่',o:['ไม่จำเป็นต้องเท่ากัน เพราะตัวหารคือ Support ของฝั่ง LHS ซึ่งต่างกัน','เท่ากันเสมอ','เท่ากันเฉพาะเมื่อมีสินค้า 2 ชนิด','ไม่สามารถคำนวณได้'],e:'Support ของคู่เท่าเดิม แต่<b>ตัวหาร = Support(LHS)</b> ต่างกัน เช่นสไลด์: โยเกิร์ต⇒นม 100% แต่ นม⇒โยเกิร์ต 75%'},
+{c:'ar',q:'กฎความสัมพันธ์ที่ดีที่สุดต้องมีคุณสมบัติอย่างไร',o:['ผ่านทั้งเกณฑ์ Minimum Support และ Minimum Confidence','ผ่านเฉพาะ Minimum Support','ผ่านเฉพาะ Minimum Confidence','มี LHS มากที่สุด'],e:'สไลด์: กฎที่ดีที่สุด<b>ต้องผ่านทั้งเกณฑ์ Minimum Support และ Minimum Confidence</b>'},
+{c:'ar',q:'นอกจาก Support และ Confidence สไลด์กล่าวถึงตัววัดประสิทธิภาพของกฎตัวใดอีก',o:['lift','Entropy','Recall','Gini Index'],e:'สไลด์: วัดประสิทธิภาพของกฎที่ได้โดยใช้ตัววัดที่ชื่อว่า <b>confidence และ lift</b>'},
+{c:'ar',q:'การสร้างกฎความสัมพันธ์จาก itemset ทำได้อย่างไร',o:['แบ่งสินค้าใน itemset (ตั้งแต่ 2 ชนิดขึ้นไป) ออกเป็นสองกลุ่ม (binary partition)','ใช้ itemset ที่มีสินค้าชนิดเดียว','คำนวณ Information Gain','สุ่มสินค้ามาจับคู่'],e:'สไลด์: itemset ที่มีตั้งแต่ <b>2 ชนิดขึ้นไป</b> สร้างกฎได้โดย<b>แบ่งสินค้าเป็นสองกลุ่ม (binary partition)</b> คือ LHS และ RHS'},
+{c:'ar',q:'การแปลงข้อมูลจาก POS database เป็น Transaction database ทำได้อย่างไร',o:['Group by ตามเวลาที่ซื้อสินค้า (ใบเสร็จเดียวกัน)','เรียงตามราคาสินค้า','คำนวณค่า Confidence','แบ่ง train/test'],e:'สไลด์: แปลงโดย <b>group by ตามเวลาที่ซื้อสินค้า</b> → สินค้าในใบเสร็จเดียวกันรวมเป็น 1 ตะกร้า'},
+{c:'ar',q:'ข้อใด "ไม่ใช่" ข้อมูลใน Transaction ตามที่สไลด์ระบุ',o:['ค่า Confidence ของสินค้า','รหัสการซื้อหนึ่งใบเสร็จ','ปริมาณสินค้าที่ซื้อ','จำนวนเงิน'],e:'ข้อมูลใน Transaction ได้แก่ รหัสการซื้อ ข้อมูลลักษณะลูกค้า ปริมาณสินค้า ประเภทสินค้า จำนวนเงิน · <b>Confidence เป็นค่าที่คำนวณภายหลัง</b>'},
+{c:'ar',q:'ข้อใด "ไม่ใช่" การนำกฎความสัมพันธ์ไปใช้ประโยชน์ตามสไลด์',o:['วินิจฉัยโรคจากอาการผู้ป่วย','จัดวางสินค้า LHS กับ RHS ไว้ใกล้กัน','ออกโปรโมชันซื้อคู่ (Bundling)','จัดทำแคตตาล็อกแนะนำ Frequently Bought Together'],e:'สไลด์ระบุ 3 ด้าน: จัดวางสินค้า · ส่งเสริมการขาย · แคตตาล็อก · <b>วินิจฉัยโรค</b> เป็นตัวอย่างของ Naïve Bayes'},
+{c:'ar',q:'ทำไม Apriori จึงตัด itemset ที่ไม่ผ่าน minimum support ออกตั้งแต่ขั้นแรก',o:['เพื่อลดจำนวนรูปแบบที่ต้องคำนวณ เพราะคำนวณครบ 2ᴺ−1 แบบไม่ได้เมื่อสินค้ามีมาก','เพื่อให้ Confidence เป็น 100% ทุกกฎ','เพราะ itemset นั้นมี Confidence ต่ำแน่นอน','เพื่อเพิ่มจำนวนทรานแซคชัน'],e:'ร้านจริงมีสินค้าเป็นหมื่น 2ᴺ−1 มหาศาล การ<b>ตัดตัวที่ไม่บ่อยทิ้ง</b>ช่วยลดภาระคำนวณ และ itemset ที่ยาวกว่าซึ่งมีตัวนั้นก็ไม่มีทางบ่อยกว่า'},
+{c:'ar',q:'ใน Lab AI Studio Operator ใดใช้หา frequent itemsets ก่อนส่งให้ Create Association Rules',o:['FP-Growth','Naïve Bayes','Split Data','Performance'],e:'Flow: Retrieve → Select Attributes → Numerical to Binominal → <b>FP-Growth</b> → Create Association Rules'},
+{c:'ar',q:'ใน Lab AI Studio ทำไมต้องใช้ Operator "Numerical to Binominal"',o:['เพื่อแปลงข้อมูลตัวเลขเป็นค่าแบบกลุ่ม (จริง/เท็จ) ให้เหมาะกับการหากฎความสัมพันธ์','เพื่อแบ่งข้อมูล train/test','เพื่อคำนวณค่า Confidence','เพื่อวัดประสิทธิภาพโมเดล'],e:'Association Rule ใช้ข้อมูลแบบ <b>Nominal/Ordinal</b> จึงต้องแปลงตัวเลข (1/0) ให้เป็นค่า<b>จริง/เท็จ (Binominal)</b> ว่าซื้อหรือไม่ซื้อ'}
+];
+
+/* ---------- written practice (keyword explain) ---------- */
+const W=[
+{c:'ev',q:'จงอธิบายความหมายของ Confusion Matrix และอธิบายค่า TP, TN, FP, FN',
+ k:[['Confusion Matrix','คอนฟิวชัน'],['ทำนาย','Predicted','Predict'],['จริง','Actual','เฉลย'],['TP','True Positive'],['TN','True Negative'],['FP','False Positive'],['FN','False Negative'],['Type I'],['Type II'],['Classification','จำแนก']],
+ a:'<b>Confusion Matrix</b> คือตารางที่ใช้เปรียบเทียบผลที่โมเดลทำนาย (Predicted) กับค่าจริง (Actual) เพื่อวัดประสิทธิภาพของโมเดล Classification<br>• <b>TP (True Positive)</b> ทำนายว่าใช่ และใช่จริง (Hit)<br>• <b>TN (True Negative)</b> ทำนายว่าไม่ใช่ และไม่ใช่จริง (Correct Rejection)<br>• <b>FP (False Positive)</b> ทำนายว่าใช่ แต่จริง ๆ ไม่ใช่ (False Alarm, Type I error)<br>• <b>FN (False Negative)</b> ทำนายว่าไม่ใช่ แต่จริง ๆ ใช่ (Miss, Type II error)<br>ตัวอย่าง: ให้หมาเป็น Positive ถ้าแมวถูกทายว่าเป็นหมา คือ FP'},
+{c:'ev',q:'จงอธิบายความหมายของ Precision, Recall, F-measure และ Accuracy',
+ k:[['Precision'],['Recall'],['F-measure','F1','F-Measure'],['Accuracy'],['TP'],['FP'],['FN'],['ทุกคลาส','รวม'],['ทีละคลาส','แยก'],['ค่าเฉลี่ย','เฉลี่ย']],
+ a:'• <b>Precision</b> (ความแม่นยำ) = TP/(TP+FP) ในบรรดาที่โมเดลทายว่า Positive ทายถูกจริงกี่ส่วน พิจารณาจากผลการทำนาย แยกทีละคลาส<br>• <b>Recall</b> (ความครบถ้วน) = TP/(TP+FN) ในบรรดาของที่เป็น Positive จริง โมเดลจับได้กี่ส่วน พิจารณาจากผลเฉลย แยกทีละคลาส<br>• <b>F-measure</b> = 2×P×R/(P+R) เป็นค่าเฉลี่ยของ Precision และ Recall ใช้ดูความสมดุลของทั้งสองค่า<br>• <b>Accuracy</b> = (TP+TN)/ทั้งหมด สัดส่วนที่ทายถูกทั้งหมด พิจารณารวมทุกคลาส'},
+{c:'ev',q:'จงอธิบายความแตกต่างระหว่าง Precision และ Recall พร้อมยกตัวอย่างสถานการณ์ที่ควรเน้นแต่ละค่า',
+ k:[['Precision'],['Recall'],['FP','False Positive','เตือนผิด'],['FN','False Negative','พลาด'],['ผลการทำนาย','ทำนาย'],['ผลเฉลย','เฉลย','จริง'],['ตัวอย่าง','เช่น']],
+ a:'<b>Precision</b> ดูจากผลการทำนาย: ที่ทายว่าใช่ ถูกจริงกี่ส่วน ยิ่ง FP น้อยยิ่งสูง ควรเน้นเมื่อการเตือนผิดมีราคาแพง เช่น ระบบกรอง spam ที่ไม่อยากให้อีเมลสำคัญถูกจัดเป็น spam<br><b>Recall</b> ดูจากผลเฉลย: ของจริงทั้งหมดจับได้กี่ส่วน ยิ่ง FN น้อยยิ่งสูง ควรเน้นเมื่อการพลาดของจริงมีราคาแพง เช่น การคัดกรองโรคร้ายแรงที่ห้ามพลาดผู้ป่วย<br>ถ้าต้องการทั้งสองอย่างให้ดู <b>F-measure</b>'},
+{c:'ev',q:'จงอธิบายว่าทำไม Accuracy เพียงอย่างเดียวอาจไม่เพียงพอในการประเมินโมเดล',
+ k:[['Accuracy'],['ไม่สมดุล','Imbalanced','imbalance'],['Precision'],['Recall'],['F-measure','F1'],['ตัวอย่าง','เช่น']],
+ a:'Accuracy ดูรวมทุกคลาส ถ้า<b>ข้อมูลไม่สมดุล</b> เช่น อีเมลปกติ 95% spam 5% โมเดลที่ทายว่า "ปกติ" ทุกฉบับจะได้ Accuracy 95% แต่จับ spam ไม่ได้เลย (Recall ของ spam = 0) จึงต้องดู <b>Precision, Recall และ F-measure</b> ของแต่ละคลาสประกอบด้วย'},
+{c:'dt',q:'จงอธิบายส่วนประกอบของ Decision Tree ได้แก่ Root Node, Internal Node, Branch และ Leaf Node',
+ k:[['Root'],['Internal','Decision Node'],['Branch','กิ่ง'],['Leaf','ใบ'],['แอตทริบิวต์','attribute'],['คลาส','class'],['IF','กฎ']],
+ a:'<b>Decision Tree</b> คือโมเดล Classification แบบ Supervised ที่มีโครงสร้างคล้ายต้นไม้<br>• <b>Root Node</b> โหนดบนสุด เป็นแอตทริบิวต์แรกที่แบ่งข้อมูลได้ดีที่สุด<br>• <b>Internal Node</b> โหนดภายใน ใช้ทดสอบเงื่อนไขของแอตทริบิวต์<br>• <b>Branch</b> กิ่ง แทนค่าหรือผลของการทดสอบ เช่น sunny / rainy<br>• <b>Leaf Node</b> โหนดปลายสุด บอกคลาสคำตอบ เช่น yes / no<br>ทุกเส้นทางจาก Root ถึง Leaf แปลงเป็นกฎ IF–THEN ได้'},
+{c:'dt',q:'จงอธิบายความหมายของ Entropy และ Information Gain ในการสร้าง Decision Tree',
+ k:[['Entropy'],['Information Gain','Gain'],['ไม่บริสุทธิ์','impurity','ปน'],['ลดลง','ลด'],['สูงสุด','สูงที่สุด','มากที่สุด'],['Root','โหนด']],
+ a:'<b>Entropy</b> คือค่าที่วัดความไม่บริสุทธิ์ (impurity) หรือความปนกันของคลาสในกลุ่มข้อมูล ถ้าเป็นคลาสเดียวกันทั้งหมด Entropy = 0 ถ้าปนกันเท่า ๆ กันจะมีค่าสูงสุด<br><b>Information Gain</b> คือค่าที่ Entropy ลดลงหลังแบ่งข้อมูลด้วยแอตทริบิวต์หนึ่ง (Entropy ก่อนแบ่ง − หลังแบ่ง) แอตทริบิวต์ที่มี Information Gain สูงที่สุดจะถูกเลือกเป็นโหนด โดยตัวแรกเป็น Root (อัลกอริทึม ID3)'},
+{c:'dt',q:'จงอธิบายความหมายของ Overfitting และ Pruning ใน Decision Tree',
+ k:[['Overfitting'],['Pruning','ตัดแต่ง','ตัดกิ่ง'],['ข้อมูลสอน','training','train'],['ข้อมูลใหม่','new'],['ซับซ้อน','ลึก']],
+ a:'<b>Overfitting</b> คือการที่ต้นไม้ซับซ้อนหรือลึกเกินไป จนจำแม้กระทั่ง noise ของข้อมูลสอน ทำให้แม่นยำกับข้อมูลสอนแต่ทำนายข้อมูลใหม่ได้ไม่ดี<br><b>Pruning</b> คือการตัดแต่งกิ่งที่ไม่จำเป็นออก ทำให้ต้นไม้เล็กลงและทั่วไปขึ้น ลด Overfitting มี 2 แบบ คือ Pre-pruning (หยุดแตกกิ่งระหว่างสร้าง) และ Post-pruning (สร้างเสร็จแล้วค่อยตัด)'},
+{c:'nb',q:'จงอธิบายหลักการของ Naïve Bayes พร้อมความหมายของ Prior, Likelihood และ Posterior Probability',
+ k:[['Bayes'],['ความน่าจะเป็น','probability'],['Supervised','มีผู้สอน'],['Prior','P(C)'],['Likelihood','P(A|C)'],['Posterior','P(C|A)'],['มากที่สุด','สูงสุด','มากกว่า']],
+ a:'<b>Naïve Bayes</b> เป็นเทคนิคจำแนกข้อมูลแบบ Supervised Learning คิดค้นโดย Thomas Bayes ใช้หลักความน่าจะเป็นตาม Bayes Theorem: P(C|A) = P(A|C) × P(C) / P(A) เพื่อทำนายสิ่งที่ยังไม่เกิดจากสิ่งที่เคยเกิดขึ้นมาก่อน<br>• <b>Prior P(C)</b> ความน่าจะเป็นที่ทราบมาก่อน = สัดส่วนของคลาส C<br>• <b>Likelihood P(A|C)</b> ความน่าจะเป็นที่ข้อมูลคลาส C มีแอตทริบิวต์ A<br>• <b>Posterior P(C|A)</b> ความน่าจะเป็นที่ข้อมูลที่มีแอตทริบิวต์ A จะเป็นคลาส C<br>คำนวณทุกคลาส แล้วเลือกคลาสที่มีค่ามากที่สุดเป็นคำตอบ'},
+{c:'nb',q:'จงอธิบายว่าเหตุใดจึงเรียกว่า "Naïve" Bayes และยกตัวอย่างการนำไปประยุกต์ใช้',
+ k:[['อิสระ','independent'],['แอตทริบิวต์','attribute'],['คูณ'],['Spam','สแปม'],['Medical','วินิจฉัย','Sentiment','Face','News','Weather','Digit']],
+ a:'เรียกว่า <b>Naïve (ไร้เดียงสา)</b> เพราะสมมติว่าแต่ละแอตทริบิวต์เป็น<b>อิสระต่อกัน</b> จึงนำความน่าจะเป็นของแต่ละแอตทริบิวต์มาคูณกันได้ตรง ๆ ทั้งที่ในความจริงอาจสัมพันธ์กัน ทำให้อัลกอริทึมไม่ซับซ้อน สร้างโมเดลง่าย<br>การประยุกต์ใช้ เช่น Email Spam Detection, Sentiment Analysis, Face Recognition, Categorizing News, Weather Prediction, Medical Diagnosis, Digit Recognition'},
+{c:'ar',q:'จงอธิบายความหมายของ Association Rule และ Market Basket Analysis พร้อมยกตัวอย่างการนำไปใช้',
+ k:[['Association'],['Market Basket','ตะกร้า'],['ความสัมพันธ์'],['ค้าปลีก','retail','ซูเปอร์มาร์เก็ต'],['Transaction'],['จัดวาง','โปรโมชัน','แคตตาล็อก','ส่งเสริมการขาย']],
+ a:'<b>Association Rule</b> คือการทำเหมืองข้อมูลเพื่อค้นหาความสัมพันธ์ของข้อมูลที่เกิดขึ้นร่วมกันบ่อย ๆ (frequent pattern) จาก Transaction Database เขียนในรูป LHS ⇒ RHS<br><b>Market Basket Analysis</b> คือการวิเคราะห์ตะกร้าการซื้อในธุรกิจค้าปลีก เพื่อศึกษาว่าลูกค้ามักซื้อสินค้าใดร่วมกัน เช่น ผู้ซื้อผ้าอ้อมมักซื้อเบียร์<br>นำไปใช้: จัดวางสินค้าไว้ใกล้กัน ส่งเสริมการขาย/โปรซื้อคู่ และจัดทำแคตตาล็อกแนะนำสินค้า'},
+{c:'ar',q:'จงอธิบายความหมายของ Support, Confidence, LHS และ RHS',
+ k:[['Support'],['Confidence'],['LHS','Left'],['RHS','Right'],['ทั้งหมด'],['ส่วนก่อน','ซ้าย'],['ส่วนหลัง','ขวา']],
+ a:'• <b>Support</b> (ค่าสนับสนุน) = จำนวนทรานแซคชันที่มี itemset ÷ ทรานแซคชันทั้งหมด วัดความนิยมภาพรวม<br>• <b>Confidence</b> (ค่าความเชื่อมั่น) = Support(LHS,RHS) ÷ Support(LHS) วัดว่าถ้าซื้อ LHS แล้วจะซื้อ RHS ด้วยกี่ % (ความน่าเชื่อถือของกฎ)<br>• <b>LHS</b> (Left-Hand Side) ส่วนซ้าย/ส่วนก่อนของกฎ เช่น {ขนมปัง}<br>• <b>RHS</b> (Right-Hand Side) ส่วนขวา/ส่วนหลัง สินค้าที่ซื้อตาม เช่น {เนย}<br>กฎที่ดีต้องผ่านทั้ง minimum support และ minimum confidence'},
+{c:'ar',q:'จงอธิบายขั้นตอนการหากฎความสัมพันธ์ด้วยวิธี Apriori',
+ k:[['Apriori'],['frequent itemset','frequent'],['minimum support','Minimum Support','support'],['Join'],['Count'],['association rule','กฎ'],['confidence','Confidence']],
+ a:'<b>Apriori</b> มี 2 ขั้นตอนใหญ่<br>1. <b>หา frequent itemsets</b> คือ itemset ที่เกิดขึ้นบ่อยกว่าหรือเท่ากับ minimum support มี 2 ขั้นย่อย: <b>Join</b> สร้าง itemset ที่ยาวขึ้นทีละหนึ่งจาก itemset ที่ผ่านเกณฑ์ และ <b>Count</b> นับค่า support แล้วตัดตัวที่ไม่ผ่านทิ้ง<br>2. <b>สร้าง association rule</b> จาก frequent itemsets ในรูป LHS ⇒ RHS แล้วเลือกเฉพาะกฎที่ผ่าน minimum confidence เช่น Apple ⇒ Cereal'}
+];
+
+/* ======================= APP ======================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const getJ=(k,d)=>{try{return JSON.parse(store.get(k))||d}catch(e){return d}};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400)}
+function confetti(n=40){const c=['#ff7eb6','#9b7bff','#2fc49a','#ffbe3d','#5aaeff'];for(let i=0;i<n;i++){const d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDuration=(1.2+Math.random()*1.3)+'s';d.style.animationDelay=Math.random()*.3+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3000)}}
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));window.scrollTo({top:0,behavior:'smooth'})}
+$$('[data-home]').forEach(b=>b.onclick=()=>{renderHome();go('home')});
+
+/* theme */
+const root=document.documentElement;
+function isDark(){const t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+function applyTheme(t){if(t)root.setAttribute('data-theme',t);$('#themeBtn').textContent=isDark()?'☀️':'🌙'}
+applyTheme(store.get('dm2_theme'));
+$('#themeBtn').onclick=()=>{const n=isDark()?'light':'dark';store.set('dm2_theme',n);applyTheme(n)};
+
+/* home */
+let mode=store.get('dm2_mode')||'quiz';
+$$('#modeSeg button').forEach(b=>{b.classList.toggle('on',b.dataset.m===mode);b.onclick=()=>{mode=b.dataset.m;store.set('dm2_mode',mode);$$('#modeSeg button').forEach(x=>x.classList.toggle('on',x===b));renderHome()}});
+function renderHome(){
+  const st=getJ('dm2_stats',{});
+  let done=0;ORDER.forEach(c=>{if(st[c])done++});
+  $('#doneCount').textContent=done;$('#doneBar').style.width=(done/4*100)+'%';
+  $('#mockBest').textContent=st.mock?`${st.mock.best}/60`:'–';
+  $('#doneFoot').textContent=done===4?'ทำครบ 4 บทแล้ว · ลองจำลองสอบ 60 ข้อเลย!':done?`เหลืออีก ${4-done} บท สู้ ๆ!`:'เริ่มจากบทไหนก็ได้ สู้ ๆ!';
+  $('#topicList').innerHTML=ORDER.map(c=>{
+    const m=CH[c],n=Q.filter(q=>q.c===c).length,s=st[c];
+    let pills='',btn='';
+    if(mode==='quiz'){
+      pills=(s?`<span class="pill ${s.best===s.total?'good':''}">ล่าสุด ${s.last}/${s.total} ข้อ · ดีที่สุด ${s.best}/${s.total}</span>`:'<span class="pill">ยังไม่ได้ทำ</span>')+`<span class="pill">${n} ข้อ</span>`;
+      btn=`<button class="btn ${s?'purple':''}" data-act="quiz" data-c="${c}">${s?'ทำอีกครั้ง':'เริ่มทำ'} →</button>`;
+    }else if(mode==='read'){
+      pills=`<span class="pill">📖 สรุปเนื้อหา</span><span class="pill">${CARDS[c].length} คีย์เวิร์ด</span>`;
+      btn=`<button class="btn mint" data-act="read" data-c="${c}">อ่านบทนี้ →</button>`;
+    }else{
+      pills=`<span class="pill">🃏 ${CARDS[c].length} การ์ด</span><span class="pill">ซ้อมข้อเขียน</span>`;
+      btn=`<button class="btn purple" data-act="cards" data-c="${c}">เปิดการ์ด →</button>`;
+    }
+    if(m.hot)pills=`<span class="pill hot">⭐ ออกเยอะสุด</span>`+pills;
+    return `<div class="topic t-${c}"><div class="badge">${m.n}</div><div class="mid"><h3>${m.title}</h3><div class="kw">${m.kw}</div>${pills}</div><div class="go">${btn}</div></div>`;
+  }).join('');
+  $$('#topicList [data-act]').forEach(b=>b.onclick=()=>{const c=b.dataset.c;({quiz:()=>startQuiz(c),read:()=>openRead(c),cards:()=>openCards(c)})[b.dataset.act]()});
+}
+
+/* read */
+let curRead='ev';
+function openRead(c){curRead=c;$('#readTag').textContent=`บท ${CH[c].n} · ${CH[c].title}`;$('#readBody').innerHTML=READ[c];go('read')}
+$('#readToQuiz').onclick=()=>startQuiz(curRead);
+
+/* cards */
+let curCards=[];
+function openCards(c){$('#cardTag').textContent=`บท ${CH[c].n}`;$('#cardTitle').textContent='🃏 การ์ดคีย์เวิร์ด · '+CH[c].title;curCards=CARDS[c];drawCards();go('cards')}
+function drawCards(){$('#cardGrid').innerHTML=curCards.map(([t,d])=>`<div class="flip"><div class="in"><div class="f"><b>${t}</b><small>แตะเพื่อดูความหมาย</small></div><div class="b">${d}</div></div></div>`).join('');$$('.flip').forEach(f=>f.onclick=()=>f.classList.toggle('on'))}
+$('#flipAll').onclick=()=>{const all=$$('.flip');const on=all.some(f=>!f.classList.contains('on'));all.forEach(f=>f.classList.toggle('on',on))};
+$('#shufCards').onclick=()=>{curCards=shuffle(curCards);drawCards()};
+
+/* quiz */
+let deck=[],qi=0,score=0,streak=0,maxStreak=0,wrongs=[],answered=false,key=null,lastStart=null;
+const chName=c=>`บท ${CH[c].n}`;
+function begin(list,k){deck=list.map(q=>({...q,ord:shuffle(q.o.map((_,i)=>i))}));key=k;qi=0;score=0;streak=0;maxStreak=0;wrongs=[];go('quiz');showQ()}
+function startQuiz(c){lastStart=()=>startQuiz(c);begin(shuffle(Q.filter(q=>q.c===c)),c)}
+function startMock(){lastStart=startMock;let list=[];ORDER.forEach(c=>list=list.concat(shuffle(Q.filter(q=>q.c===c)).slice(0,CH[c].mock)));begin(shuffle(list),'mock')}
+$('#goMock').onclick=startMock;
+function showQ(){
+  answered=false;const q=deck[qi];
+  $('#qNum').textContent=`ข้อ ${qi+1} / ${deck.length}`;$('#qCh').textContent=chName(q.c)+' · '+CH[q.c].kw.split(' · ')[0];
+  $('#qScore').textContent=score;$('#qStreak').textContent=streak;$('#qBar').style.width=(qi/deck.length*100)+'%';
+  $('#qText').innerHTML=q.q;
+  $('#qOpts').innerHTML=q.ord.map((oi,p)=>`<button class="opt" data-oi="${oi}"><span class="k">${'กขคง'[p]}</span><span>${q.o[oi]}</span></button>`).join('');
+  $$('#qOpts .opt').forEach(b=>b.onclick=()=>answer(b));
+  $('#qExp').className='explain';$('#qExp').innerHTML='';
+  $('#nextBtn').disabled=true;$('#nextBtn').textContent=qi===deck.length-1?'ดูผลคะแนน 🏁':'ข้อต่อไป ➜';
+}
+const yay=['เก่งมาก!','ถูกต้อง!','เยี่ยมเลย!','ปังมาก!','ใช่เลย!'],nay=['ไม่เป็นไรนะ','เกือบแล้ว!','จำจุดนี้ไว้นะ'];
+function answer(btn){
+  if(answered)return;answered=true;const q=deck[qi],ok=+btn.dataset.oi===0;
+  $$('#qOpts .opt').forEach(b=>{b.disabled=true;if(+b.dataset.oi===0)b.classList.add('right')});
+  if(ok){score++;streak++;maxStreak=Math.max(maxStreak,streak);confetti(streak>=5?55:24);if(streak>=3)toast(`🔥 ถูกติดกัน ${streak} ข้อ!`)}
+  else{btn.classList.add('wrong');streak=0;wrongs.push(q)}
+  $('#qScore').textContent=score;$('#qStreak').textContent=streak;
+  const ex=$('#qExp');ex.className='explain show '+(ok?'ok':'no');
+  ex.innerHTML=`<div class="verdict">${ok?'✅ '+yay[Math.floor(Math.random()*5)]:'💡 '+nay[Math.floor(Math.random()*3)]+' · คำตอบคือ “'+q.o[0]+'”'}</div>${q.e}`;
+  $('#nextBtn').disabled=false;ex.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+$('#nextBtn').onclick=()=>{if(qi<deck.length-1){qi++;showQ()}else endQuiz()};
+$('#quitBtn').onclick=()=>{renderHome();go('home')};
+function endQuiz(){
+  const total=deck.length,pct=Math.round(score/total*100);
+  if(key){const st=getJ('dm2_stats',{});const o=st[key]||{best:0};st[key]={last:score,best:Math.max(o.best,score),total};store.set('dm2_stats',JSON.stringify(st))}
+  $('#endScore').textContent=`${score}/${total}`;$('#stC').textContent=score;$('#stW').textContent=total-score;$('#stS').textContent=maxStreak;
+  const [em,ti]=pct>=90?['🏆','สุดยอด! พร้อมสอบแล้ว']:pct>=75?['🎉','เก่งมาก! อีกนิดเดียว']:pct>=50?['💪','ผ่านครึ่งแล้ว ทวนข้อที่ผิดอีกรอบนะ']:['📚','ไม่เป็นไร กลับไปอ่านสรุปแล้วลุยใหม่!'];
+  $('#endEmoji').textContent=em;$('#endTitle').textContent=ti+` (${pct}%)`;if(pct>=75)confetti(90);
+  const by={};deck.forEach(q=>{by[q.c]=by[q.c]||[0,0];by[q.c][1]++;if(!wrongs.includes(q))by[q.c][0]++});
+  $('#chBreak').innerHTML=Object.keys(by).length>1?Object.keys(by).map(c=>`<span class="pill">${chName(c)}: ${by[c][0]}/${by[c][1]}</span>`).join(''):'';
+  $('#retryWrong').hidden=!wrongs.length;
+  $('#review').innerHTML=wrongs.length?`<div class="card"><h2>📌 ข้อที่ควรทวน (${wrongs.length} ข้อ)</h2>`+wrongs.map(q=>`<div class="reviewItem"><b>${q.q}</b><br>✔ ${q.o[0]}<br><span style="color:var(--soft)">${q.e}</span></div>`).join('')+'</div>':'';
+  go('result');
+}
+$('#retryWrong').onclick=()=>begin(shuffle(wrongs),null);
+$('#againBtn').onclick=()=>lastStart&&lastStart();
+
+/* writing */
+function norm(s){return s.toLowerCase().replace(/\s+/g,'')}
+function drawWrite(list){
+  $('#writeList').innerHTML=list.map(i=>{const w=W[i];return `<div class="wq" data-i="${i}"><span class="pill">บท ${CH[w.c].n}</span><h3>${w.q}</h3>
+  <textarea placeholder="เขียนคำตอบตรงนี้ ✏️ (บันทึกอัตโนมัติ)"></textarea>
+  <div class="kwrow">${w.k.map(k=>`<span>${k[0]}</span>`).join('')}</div>
+  <div class="wtools"><button class="btn sm mint" data-chk>🔍 ตรวจคีย์เวิร์ด</button><button class="btn sm purple" data-ans>👀 ดูแนวคำตอบ</button></div>
+  <div class="model">${w.a}</div></div>`}).join('');
+  $$('#writeList .wq').forEach(box=>{
+    const i=+box.dataset.i,ta=box.querySelector('textarea'),kk='dm2_w'+i;ta.value=store.get(kk)||'';
+    const check=(say)=>{const t=norm(ta.value);let hit=0;box.querySelectorAll('.kwrow span').forEach((s,j)=>{const h=W[i].k[j].some(x=>t.includes(norm(x)));s.classList.toggle('hit',h);if(h)hit++});
+      if(say){const n=W[i].k.length;toast(hit===n?'🎉 คีย์เวิร์ดครบเลย!':`มีคีย์เวิร์ด ${hit}/${n} ลองเติมคำที่ยังเป็นสีเทานะ`);if(hit===n)confetti(40)}};
+    ta.oninput=()=>{store.set(kk,ta.value);check(false)};check(false);
+    box.querySelector('[data-chk]').onclick=()=>check(true);
+    box.querySelector('[data-ans]').onclick=e=>{const m=box.querySelector('.model');m.classList.toggle('show');e.target.textContent=m.classList.contains('show')?'🙈 ซ่อนแนวคำตอบ':'👀 ดูแนวคำตอบ'};
+  });
+}
+function openWrite(){drawWrite(W.map((_,i)=>i));go('write')}
+$('#goWrite').onclick=openWrite;
+$('#allWrite').onclick=()=>drawWrite(W.map((_,i)=>i));
+$('#mockWrite').onclick=()=>{const ev=shuffle(W.map((w,i)=>w.c==='ev'?i:-1).filter(i=>i>=0))[0];const other=shuffle(W.map((w,i)=>w.c!=='ev'?i:-1).filter(i=>i>=0))[0];drawWrite([ev,other]);toast('สุ่ม 2 ข้อแล้ว ลองจับเวลาเขียนดูนะ ⏱️')};
+
+renderHome();
+</script>
+</body>
+</html>
